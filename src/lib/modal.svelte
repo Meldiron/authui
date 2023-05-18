@@ -312,6 +312,8 @@
 											{:else}
 												<button class="button is-full-width" type="submit">Sign in</button>
 											{/if}
+
+
 											{#if credentialsError}
 												<div
 													class="u-text-center u-bold u-margin-block-start-16"
@@ -320,6 +322,18 @@
 													<p class="text">{credentialsError}</p>
 												</div>
 											{/if}
+
+
+											<ul
+												class="inline-links is-center is-with-sep u-margin-block-start-16"
+											>
+												<li class="inline-links-item">
+													<button type="button"><span class="text">Forgot Password?</span></button>
+												</li>
+												<li class="inline-links-item">
+													<button type="button"><span class="text">Sign Up</span></button>
+												</li>
+											</ul>
 										</li>
 									</ul>
 								</form>
