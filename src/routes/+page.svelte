@@ -9,12 +9,17 @@
 			? true
 			: false
 		: $page.url.hostname.split('.').length >= 3
-		? true
+		? $page.url.hostname.startsWith('www')
+			? false
+			: true
 		: false;
 </script>
 
 {#if isSubdomain}
-	<div class="u-flex u-main-center u-cross-center" style="min-height: 100vh; padding: 1rem; width: 100%; max-width: 500px; margin-left: auto; margin-right: auto;">
+	<div
+		class="u-flex u-main-center u-cross-center"
+		style="min-height: 100vh; padding: 1rem; width: 100%; max-width: 500px; margin-left: auto; margin-right: auto;"
+	>
 		<Modal />
 	</div>
 {:else}
