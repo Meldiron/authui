@@ -6,6 +6,36 @@
 		<meta name="viewport" content="width=device-width" />
 		%sveltekit.head%
 
+		<!-- HTML Meta Tags -->
+		<title>Auth UI | Universal Auth Service</title>
+		<meta
+			name="description"
+			content="Fully customizable login flow for your applications. Get started in minutes, not hours!"
+		/>
+
+		<!-- Facebook Meta Tags -->
+		<!-- <meta property="og:url" content="https://www.authui.site/"> -->
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Auth UI | Universal Auth Service" />
+		<meta
+			property="og:description"
+			content="Fully customizable login flow for your applications. Get started in minutes, not hours!"
+		/>
+		<meta property="og:image" content="https://www.authui.site/cover.png" />
+
+		<!-- Twitter Meta Tags -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta property="twitter:domain" content="authui.site" />
+		<!-- <meta property="twitter:url" content="https://www.authui.site/"> -->
+		<meta name="twitter:title" content="Auth UI |  Universal Auth Service" />
+		<meta
+			name="twitter:description"
+			content="Fully customizable login flow for your applications. Get started in minutes, not hours!"
+		/>
+		<meta name="twitter:image" content="https://www.authui.site/cover.png" />
+
+		<!-- Meta Tags Generated via https://www.opengraph.xyz -->
+
 		<style>
 			.c-mini-radio input[type='radio']:checked + span {
 				color: hsl(var(--color-neutral-200));
@@ -17,6 +47,33 @@
 
 			.c-domain .input-text-wrapper :where(.options-list) {
 				inset-inline-end: 4rem;
+			}
+
+			.c-domain .options-list-button {
+				cursor: unset;
+			}
+
+			.c-domain .options-list-button:hover,
+			.c-domain .options-list-button:active,
+			.c-domain .options-list-button:focus {
+				background-color: transparent;
+			}
+
+			button.is-border-dashed {
+				border: dashed 0.0625rem hsl(var(--color-neutral-30));
+				color: hsl(var(--color-neutral-100));
+			}
+
+			button.is-border-dashed:hover {
+				background-color: hsl(var(--color-neutral-5));
+			}
+
+			.c-modal button {
+				border-radius: var(--c-border-radius);
+			}
+
+			.c-modal input {
+				border-radius: var(--c-border-radius);
 			}
 		</style>
 	</head>

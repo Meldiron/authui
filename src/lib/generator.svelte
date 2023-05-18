@@ -1,27 +1,26 @@
 <script lang="ts">
-	let provider = 'appwrite';
+	import Modal from './modal.svelte';
 
+	let provider = 'appwrite';
 	let providerProject = '';
 	let providerEndpoint = 'https://cloud.appwrite.io/v1';
 
 	let successUrl = '';
 	let failureUrl = '';
-
-	let name = '';
 	let domain = '';
 
-	let brandColor = 'pink';
-	let roundedCorners = 'xs';
+	let name = '';
+	// let brandColor: 'pink' | 'orange' | 'green' | 'blue' | 'red' = 'pink';
+	let borderRadius: 'xs' | 'm' | 'xl' = 'xs';
 
-	let guest = false;
-	let magicUrl = false;
-	let phone = false;
-	let oauth = false;
+	let allowGuest = false;
+	let allowMagicUrl = false;
+	let allowPhone = false;
 
-    let google = false;
-    let github = false;
-    let twitter = false;
-    let facebook = false;
+	let allowGoogle = false;
+	let allowGitHub = false;
+	let allowTwitter = false;
+	let allowFacebook = false;
 </script>
 
 <div class="flex flex-vertical">
@@ -46,7 +45,7 @@
 					<code class="u-un-break-text" />
 				</div>
 				<p class="body-text-1 u-normal u-margin-block-start-8">
-					Fully customizable login flow for your application. Get started in minutes, not hours!
+					Fully customizable login flow for your applications. Get started in minutes, not hours!
 				</p>
 			</div>
 		</div>
@@ -64,7 +63,12 @@
 						<div>
 							<h3 class="eyebrow-heading-3">Brand Color</h3>
 
-							<div class="u-flex u-flex-wrap u-gap-12 u-margin-block-start-12">
+                            <button class="tag is-info u-cross-child-center u-margin-block-start-12">
+                                <span class="icon-color-swatch" aria-hidden="true"></span>
+                                <span class="text">Coming soon</span>
+                              </button>
+
+							<!-- <div class="u-flex u-flex-wrap u-gap-12 u-margin-block-start-12">
 								<button on:click={() => (brandColor = 'pink')}>
 									<div class="avatar is-color-pink">
 										{#if brandColor === 'pink'}
@@ -100,7 +104,7 @@
 										{/if}
 									</div>
 								</button>
-							</div>
+							</div> -->
 						</div>
 
 						<div>
@@ -108,40 +112,40 @@
 
 							<div class="c-mini-radio u-flex u-flex-wrap u-gap-12 u-margin-block-start-12">
 								<button
-									on:click={() => (roundedCorners = 'xs')}
+									on:click={() => (borderRadius = 'xs')}
 									class="button is-only-icon is-secondary"
 								>
 									<input
 										style="display: none;"
 										type="radio"
-										bind:group={roundedCorners}
-										name="roundedCorners"
+										bind:group={borderRadius}
+										name="borderRadius"
 										value="xs"
 									/>
 									<span class="u-x-small">XS</span>
 								</button>
 								<button
-									on:click={() => (roundedCorners = 'm')}
+									on:click={() => (borderRadius = 'm')}
 									class="button is-only-icon is-secondary"
 								>
 									<input
 										style="display: none;"
 										type="radio"
-										bind:group={roundedCorners}
-										name="roundedCorners"
+										bind:group={borderRadius}
+										name="borderRadius"
 										value="m"
 									/>
 									<span class="u-x-small">M</span>
 								</button>
 								<button
-									on:click={() => (roundedCorners = 'xl')}
+									on:click={() => (borderRadius = 'xl')}
 									class="button is-only-icon is-secondary"
 								>
 									<input
 										style="display: none;"
 										type="radio"
-										bind:group={roundedCorners}
-										name="roundedCorners"
+										bind:group={borderRadius}
+										name="borderRadius"
 										value="xl"
 									/>
 									<span class="u-x-small">XL</span>
@@ -195,7 +199,7 @@
 								<label class="choice-item" for="magicUrl"
 									><div class="input-text-wrapper">
 										<input
-											bind:checked={guest}
+											bind:checked={allowGuest}
 											id="magicUrl"
 											type="checkbox"
 											class="switch"
@@ -215,7 +219,7 @@
 								<label class="choice-item" for="magicUrl"
 									><div class="input-text-wrapper">
 										<input
-											bind:checked={magicUrl}
+											bind:checked={allowMagicUrl}
 											id="magicUrl"
 											type="checkbox"
 											class="switch"
@@ -236,7 +240,7 @@
 								<label class="choice-item" for="phone"
 									><div class="input-text-wrapper">
 										<input
-											bind:checked={phone}
+											bind:checked={allowPhone}
 											id="phone"
 											type="checkbox"
 											class="switch"
@@ -254,15 +258,7 @@
 							</li>
 							<li class="form-item">
 								<label class="choice-item" for="oauth"
-									><div class="input-text-wrapper">
-										<input
-											bind:checked={oauth}
-											id="oauth"
-											type="checkbox"
-											class="switch"
-											role="switch"
-										/>
-									</div>
+									><div class="input-text-wrapper" />
 									<div class="choice-item-content">
 										<div class="choice-item-title">OAuth</div>
 										<div class="choice-item-paragraph">
@@ -270,27 +266,25 @@
 											redirected to autorize.
 										</div>
 
-										{#if oauth}
-											<div class="u-flex u-flex-vertical u-gap-8">
-												<label for="google" class="u-flex u-gap-8">
-													<input bind:value={google} type="checkbox" id="google" />
-													<div><span class="text">Google</span></div>
-												</label>
-												<label for="github" class="u-flex u-gap-8">
-													<input bind:value={github} type="checkbox" id="github" />
-													<div><span class="text">GitHub</span></div>
-												</label>
-												<label for="twitter" class="u-flex u-gap-8">
-													<input bind:value={twitter} type="checkbox" id="twitter" />
-													<div><span class="text">Twitter</span></div>
-												</label>
+										<div class="u-flex u-flex-vertical u-gap-8">
+											<label for="google" class="u-flex u-gap-8">
+												<input bind:checked={allowGoogle} type="checkbox" id="google" />
+												<div><span class="text">Google</span></div>
+											</label>
+											<label for="github" class="u-flex u-gap-8">
+												<input bind:checked={allowGitHub} type="checkbox" id="github" />
+												<div><span class="text">GitHub</span></div>
+											</label>
+											<label for="twitter" class="u-flex u-gap-8">
+												<input bind:checked={allowTwitter} type="checkbox" id="twitter" />
+												<div><span class="text">Twitter</span></div>
+											</label>
 
-												<label for="facebook" class="u-flex u-gap-8">
-													<input bind:value={facebook} type="checkbox" id="facebook" />
-													<div><span class="text">Facebook</span></div>
-												</label>
-											</div>
-										{/if}
+											<label for="facebook" class="u-flex u-gap-8">
+												<input bind:checked={allowFacebook} type="checkbox" id="facebook" />
+												<div><span class="text">Facebook</span></div>
+											</label>
+										</div>
 									</div></label
 								>
 							</li>
@@ -412,17 +406,40 @@
 						</div>
 					</div>
 					<div class="grid-1-2-col-2 u-flex u-flex-vertical u-gap-24">
-						<h3 class="heading-level-4 u-text-center">Preview</h3>
-						<article
-							class="card u-grid u-cross-center u-width-full-line dashed"
-							style="background-color: hsl(var(--p-body-bg-color)); position: sticky; top: 6rem;"
-						>
-							<div class="u-flex u-cross-center u-flex-vertical u-main-center u-flex">
-								<div class="common-section">
-									<span class="text">Work in Progress</span>
+						<div class="tabs">
+							<ul class="secondary-tabs is-large">
+								<li class="secondary-tabs-item">
+									<button disabled={true} class="secondary-tabs-button">
+										<span class="text">Preview</span>
+									</button>
+								</li>
+							</ul>
+						</div>
+						<div style="position: sticky; top: 5rem;">
+							<section
+								class="card u-grid u-cross-center u-width-full-line"
+								style="background-color: hsl(var(--p-body-bg-color));"
+							>
+								<div
+									class="u-flex u-cross-center u-flex-vertical u-main-center"
+									style="width: 100%;"
+								>
+									<div class="common-section" style="width: 100%;">
+										<Modal
+											{name}
+											{borderRadius}
+											{allowGitHub}
+											{allowTwitter}
+											{allowFacebook}
+											{allowGoogle}
+											{allowGuest}
+											{allowMagicUrl}
+											{allowPhone}
+										/>
+									</div>
 								</div>
-							</div>
-						</article>
+							</section>
+						</div>
 					</div>
 				</div>
 			</article>
