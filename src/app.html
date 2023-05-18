@@ -5,6 +5,20 @@
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width" />
 		%sveltekit.head%
+
+		<style>
+			.c-mini-radio input[type='radio']:checked + span {
+				color: hsl(var(--color-neutral-200));
+			}
+
+			.c-mini-radio input[type='radio'] + span {
+				color: hsl(var(--color-neutral-50));
+			}
+
+			.c-domain .input-text-wrapper :where(.options-list) {
+				inset-inline-end: 4rem;
+			}
+		</style>
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>
