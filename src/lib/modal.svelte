@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 
 	export let borderRadius: 'xs' | 'm' | 'xl' = 'xs';
-	// export let brandColor: 'pink' | 'orange' | 'green' | 'blue' | 'red' = 'blue';
+	export let brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral' = 'primary';
 	export let name: string = '';
 
 	export let successUrl: string = '';
@@ -124,7 +124,9 @@
 <div
 	style={`width: 100%; --c-border-radius: ${
 		borderRadius === 'xs' ? '4px' : borderRadius === 'm' ? '12px' : '20px'
-	};`}
+	}; --c-border-radius-card: ${
+		borderRadius === 'xs' ? '16px' : borderRadius === 'm' ? '24px' : '30px'
+	}; --c-brand-color: var(--color-${brandColor}-${brandColor === 'neutral' ? '200' : '100'}); --c-brand-color-dark: var(--color-${brandColor}-${brandColor === 'primary' ? '300' : '120'})`}
 	class="c-modal u-flex u-flex-vertical u-gap-8"
 >
 	<a href={failureUrl} class="button is-text" style="padding: 0px;"
@@ -133,7 +135,7 @@
 	>
 
 	{#if currentUser}
-		<section class="card" style="width: 100%;">
+		<section class="card c-branded-border c-border-radius c-branded-shadow" style="width: 100%;">
 			<div class="u-max-width-500 u-width-full-line">
 				<h1 class="heading-level-3 u-margin-block-start-auto">Welcome</h1>
 				<p>
@@ -155,7 +157,7 @@
 									<ul class="form-list">
 										<li class="form-item">
 											<a href={successUrl}>
-												<button class="button is-full-width" type="submit">Continue</button></a
+												<button class="c-branded-button button is-full-width" type="submit">Continue</button></a
 											>
 
 											<div
@@ -197,7 +199,7 @@
 			</div>
 		</section>
 	{:else}
-		<section class="card" style="width: 100%;">
+		<section class="card c-branded-border c-border-radius c-branded-shadow" style="width: 100%;">
 			<div class="u-max-width-500 u-width-full-line">
 				<h1 class="heading-level-3 u-margin-block-start-auto">Log in {name ? `to ${name}` : ''}</h1>
 				<div class="u-margin-block-start-24">
@@ -310,7 +312,7 @@
 													<div class="loader" />
 												</button>
 											{:else}
-												<button class="button is-full-width" type="submit">Sign in</button>
+												<button class="c-branded-button button is-full-width" type="submit">Sign in</button>
 											{/if}
 
 

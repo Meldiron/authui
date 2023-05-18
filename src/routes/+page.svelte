@@ -25,7 +25,7 @@
 		style="min-height: 100vh; padding: 1rem; width: 100%; max-width: 500px; margin-left: auto; margin-right: auto;"
 	>
 		{#if data.page}
-			<Modal successUrl={data.page.successUrl} failureUrl={data.page.failureUrl} provider={data.page.provider} providerData={data.page.providerData} name={data.page.name} borderRadius={data.page.borderRadius} allowGitHub={data.page.allowGitHub} allowGuest={data.page.allowGuest} allowFacebook={data.page.allowFacebook} allowGoogle={data.page.allowGoogle} allowTwitter={data.page.allowTwitter} allowPhone={data.page.allowPhone} allowMagicUrl={data.page.allowMagicUrl} />
+			<Modal brandColor={data.page.brandColor} successUrl={data.page.successUrl} failureUrl={data.page.failureUrl} provider={data.page.provider} providerData={data.page.providerData} name={data.page.name} borderRadius={data.page.borderRadius} allowGitHub={data.page.allowGitHub} allowGuest={data.page.allowGuest} allowFacebook={data.page.allowFacebook} allowGoogle={data.page.allowGoogle} allowTwitter={data.page.allowTwitter} allowPhone={data.page.allowPhone} allowMagicUrl={data.page.allowMagicUrl} />
 		{:else}
 			<div
 				class="u-flex u-main-center u-cross-center"

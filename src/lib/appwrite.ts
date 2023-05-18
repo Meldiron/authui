@@ -8,6 +8,7 @@ export type AppwritePage = {
 	provider: string,
 	providerData: string,
 	borderRadius: 'xs' | 'm' | 'xl',
+	brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral',
 	allowGuest: boolean,
 	allowMagicUrl: boolean,
 	allowPhone: boolean,

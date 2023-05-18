@@ -75,6 +75,33 @@
 			.c-modal input {
 				border-radius: var(--c-border-radius);
 			}
+
+			.c-branded-button {
+				background-color: hsl(var(--c-brand-color)) !important;
+				border-color: hsl(var(--c-brand-color-dark)) !important;
+				color: white !important;
+			}
+
+			.c-branded-text {
+				color: hsl(var(--c-brand-color)) !important;
+			}
+
+			.c-branded-border {
+				border-color: hsl(var(--c-brand-color)) !important;
+			}
+
+			.c-border-radius {
+				border-radius: var(--c-border-radius-card) !important;
+			}
+
+			.c-branded-shadow {
+				-webkit-box-shadow: 0px 0px 50px -30px hsl(var(--c-brand-color)) !important;
+				box-shadow: 0px 0px 50px -30px hsl(var(--c-brand-color)) !important;
+			}
+
+			[type=checkbox]:where(:checked)::before {
+				content: "\ea38" !important;
+			}
 		</style>
 	</head>
 	<body data-sveltekit-preload-data="hover">
