@@ -1,8 +1,59 @@
-- Forgot password
-- Sign up
-- Maigc URL
-- SMS login
+> TODO: Forgot password, Sign up, Maigc URL, SMS login, Some UI for when page is generated
 
+![Cover](static/cover.png)
+
+# 🔐 Auth UI
+
+> Fully customizable login flow for your applications. Get started in minutes, not hours!
+
+![Almost Icon](static/favicon.png)
+
+## 🧰 Tech Stack
+
+- [Appwrite](https://appwrite.io/)
+- [Svelte Kit](https://kit.svelte.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Pink Design](https://pink.appwrite.io/)
+
+## 🛠️ Setup Server
+
+1. Register [Appwrite](https://cloud.appwrite.io/) account
+2. Create project
+3. Install Appwrite CLI
+4. Login with `appwrite login`
+5. Update project ID in `appwrite.json`
+6. Deploy database structure with `appwrite deploy collection`
+
+## 👀 Client Setup
+
+1. Install libraries `npm install`
+2. Update projectID or endpoint in `src/lib/appwrite.ts`, if not using production
+3. Start server `npm run dev`
+
+## 🚨 Moderation
+
+Moderate page documents in Appwrite Console. Delete pages that are spam.
+
+## 🚀 Deploy
+
+1. Deploy frontend on root domain such as `myapp.com`
+2. Add frontend domain as a platform in Appwrite project
+
+## 🤝 Contributing
+
+To contribute to frontend, make sure to use the [Pink Design](https://pink.appwrite.io/) design system. For state management, [Svelte Stores](https://svelte.dev/tutorial/writable-stores/) should be used.
+
+When contributing to Appwrite Functions, use [Appwrite CLI](https://appwrite.io/docs/command-line). Also use Appwrite CLI to sync changes to project structure such as databases or collections.
+
+## 🖼️ Screenshots
+
+![Screenshot](docs/ss1.png)
+![Screenshot](docs/ss2.png)
+![Screenshot](docs/ss3.png)
+![Screenshot](docs/ss4.png)
+![Screenshot](docs/ss5.png)
+
+## 🤖 Auto-generated documentation
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
