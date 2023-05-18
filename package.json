@@ -27,5 +27,9 @@
 		"typescript": "^5.0.0",
 		"vite": "^4.3.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@appwrite.io/pink": "^0.0.6",
+		"appwrite": "^11.0.0"
+	}
 }
