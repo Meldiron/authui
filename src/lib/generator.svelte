@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { ID } from 'appwrite';
+	import { AppwriteDatabases } from './appwrite';
 	import Modal from './modal.svelte';
 
 	let provider = 'appwrite';
@@ -21,6 +23,41 @@
 	let allowGitHub = false;
 	let allowTwitter = false;
 	let allowFacebook = false;
+
+	let isLoading = false;
+	let error = '';
+	async function onSubmit() {
+		if (isLoading) {
+			return;
+		}
+
+        error = '';
+		isLoading = true;
+
+		try {
+			await AppwriteDatabases.createDocument('main', 'pages', ID.unique(), {
+				domain,
+				name,
+				successUrl,
+				failureUrl,
+				provider,
+				providerData: JSON.stringify({ providerProject, providerEndpoint }),
+				borderRadius,
+				allowGuest,
+				allowMagicUrl,
+				allowPhone,
+				allowGoogle,
+				allowGitHub,
+				allowTwitter,
+				allowFacebook
+			});
+
+			window.location.href = `https://${domain}.authui.site/`;
+		} catch (err: any) {
+			error = err.message;
+			isLoading = false;
+		}
+	}
 </script>
 
 <div class="flex flex-vertical">
@@ -51,7 +88,7 @@
 		</div>
 
 		<div class="container u-margin-block-start-negative-56">
-			<article class="card common-section">
+			<form on:submit|preventDefault={onSubmit} class="card common-section">
 				<h6 class="heading-level-7">Generate Page</h6>
 				<p class="u-margin-block-start-8">Customize and configure your auth page.</p>
 
@@ -63,10 +100,10 @@
 						<div>
 							<h3 class="eyebrow-heading-3">Brand Color</h3>
 
-                            <button class="tag is-info u-cross-child-center u-margin-block-start-12">
-                                <span class="icon-color-swatch" aria-hidden="true"></span>
-                                <span class="text">Coming soon</span>
-                              </button>
+							<div class="tag is-info u-cross-child-center u-margin-block-start-12">
+								<span class="icon-color-swatch" aria-hidden="true" />
+								<span class="text">Coming soon</span>
+							</div>
 
 							<!-- <div class="u-flex u-flex-wrap u-gap-12 u-margin-block-start-12">
 								<button on:click={() => (brandColor = 'pink')}>
@@ -112,6 +149,7 @@
 
 							<div class="c-mini-radio u-flex u-flex-wrap u-gap-12 u-margin-block-start-12">
 								<button
+									type="button"
 									on:click={() => (borderRadius = 'xs')}
 									class="button is-only-icon is-secondary"
 								>
@@ -125,6 +163,7 @@
 									<span class="u-x-small">XS</span>
 								</button>
 								<button
+									type="button"
 									on:click={() => (borderRadius = 'm')}
 									class="button is-only-icon is-secondary"
 								>
@@ -138,6 +177,7 @@
 									<span class="u-x-small">M</span>
 								</button>
 								<button
+									type="button"
 									on:click={() => (borderRadius = 'xl')}
 									class="button is-only-icon is-secondary"
 								>
@@ -156,7 +196,7 @@
 						<h3 class="heading-level-7 u-margin-block-start-16">2. Configure</h3>
 
 						<div>
-							<form class="form u-width-full-line u-max-width-500">
+							<div class="form u-width-full-line u-max-width-500">
 								<ul class="form-list">
 									<li class="form-item">
 										<label class="label" for="name">App Name</label>
@@ -174,24 +214,19 @@
 										<label class="label" for="domain">Domain</label>
 										<div class="input-text-wrapper" style="--amount-of-buttons:2.2">
 											<input
+												required={true}
 												type="text"
 												id="domain"
 												bind:value={domain}
 												placeholder="my-awesome-app"
 											/>
 											<div class="options-list">
-												<button
-													class="options-list-button"
-													aria-label="show password / hide password"
-													type="button"
-												>
-													.authui.site
-												</button>
+												<div class="options-list-button">.authui.site</div>
 											</div>
 										</div>
 									</li>
 								</ul>
-							</form>
+							</div>
 						</div>
 
 						<ul class="form-list">
@@ -341,12 +376,13 @@
 							</li>
 						</ul>
 
-						<form class="form u-width-full-line u-max-width-500">
+						<div class="form u-width-full-line u-max-width-500">
 							<ul class="form-list">
 								<li class="form-item">
 									<label class="label" for="endpoint">Endpoint</label>
 									<div class="input-text-wrapper">
 										<input
+											required={true}
 											type="text"
 											id="endpoint"
 											class="input-text"
@@ -359,6 +395,7 @@
 									<label class="label" for="projectId">Project ID</label>
 									<div class="input-text-wrapper">
 										<input
+											required={true}
 											type="text"
 											id="projectId"
 											class="input-text"
@@ -368,16 +405,17 @@
 									</div>
 								</li>
 							</ul>
-						</form>
+						</div>
 
 						<h3 class="heading-level-7 u-margin-block-start-16">4. Redirect</h3>
 
-						<form class="form u-width-full-line u-max-width-500">
+						<div class="form u-width-full-line u-max-width-500">
 							<ul class="form-list">
 								<li class="form-item">
 									<label class="label" for="successUrl">Success URL</label>
 									<div class="input-text-wrapper">
 										<input
+											required={true}
 											type="text"
 											id="successUrl"
 											class="input-text"
@@ -390,6 +428,7 @@
 									<label class="label" for="failureUrl">Failure URL</label>
 									<div class="input-text-wrapper">
 										<input
+											required={true}
 											type="text"
 											id="failureUrl"
 											class="input-text"
@@ -399,10 +438,30 @@
 									</div>
 								</li>
 							</ul>
-						</form>
+						</div>
 
 						<div>
-							<button class="button"><span class="text">Create Auth Page</span></button>
+							{#if isLoading}
+								<div class="loader" style="color: hsl(var(--color-primary-200));" />
+							{:else}
+								<button type="submit" class="button">
+									<span class="text">Create Auth Page</span></button
+								>
+							{/if}
+
+							{#if error}
+								<section class="alert is-danger u-margin-block-start-12">
+									<div class="alert-grid">
+										<span class="icon-exclamation-circle" aria-hidden="true" />
+										<div class="alert-content">
+											<h6 class="alert-title">Something went wrong!</h6>
+											<p class="alert-message">
+												{error}
+											</p>
+										</div>
+									</div>
+								</section>
+							{/if}
 						</div>
 					</div>
 					<div class="grid-1-2-col-2 u-flex u-flex-vertical u-gap-24">
@@ -442,7 +501,7 @@
 						</div>
 					</div>
 				</div>
-			</article>
+			</form>
 		</div>
 	</div>
 </div>
