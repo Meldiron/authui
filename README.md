@@ -51,7 +51,6 @@ When contributing to Appwrite Functions, use [Appwrite CLI](https://appwrite.io/
 ![Screenshot](docs/ss2.png)
 ![Screenshot](docs/ss3.png)
 ![Screenshot](docs/ss4.png)
-![Screenshot](docs/ss5.png)
 
 ## 🤖 Auto-generated documentation
 # create-svelte
