@@ -1,4 +1,4 @@
-import { Account, Client, Databases, type Models } from 'appwrite';
+import { Account, Client, Databases, Storage, type Models } from 'appwrite';
 
 export type AppwritePage = {
 	domain: string,
@@ -15,7 +15,8 @@ export type AppwritePage = {
 	allowGoogle: boolean,
 	allowGitHub: boolean,
 	allowTwitter: boolean,
-	allowFacebook: boolean
+	allowFacebook: boolean,
+	fileId: string
 } & Models.Document;
 
 export const AppwriteClient = new Client()
@@ -24,3 +25,11 @@ export const AppwriteClient = new Client()
 
 export const AppwriteDatabases = new Databases(AppwriteClient);
 export const AppwriteAccount = new Account(AppwriteClient);
+export const AppwriteStorage = new Storage(AppwriteClient);
+
+
+export const AppwriteService = {
+	getLogo: (imageId: string) => {
+		return AppwriteStorage.getFilePreview('logos', imageId, undefined, 128, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 'webp').toString();
+	}
+}

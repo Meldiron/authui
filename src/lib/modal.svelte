@@ -2,7 +2,9 @@
 	import { browser } from '$app/environment';
 	import { Account, Client, type Models } from 'appwrite';
 	import { onMount } from 'svelte';
+	import { AppwriteService } from './appwrite';
 
+	export let fileId: string = '';
 	export let borderRadius: 'xs' | 'm' | 'xl' = 'xs';
 	export let brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral' = 'primary';
 	export let name: string = '';
@@ -125,7 +127,7 @@
 	style={`width: 100%; --c-border-radius: ${
 		borderRadius === 'xs' ? '4px' : borderRadius === 'm' ? '12px' : '20px'
 	}; --c-border-radius-card: ${
-		borderRadius === 'xs' ? '16px' : borderRadius === 'm' ? '24px' : '30px'
+		borderRadius === 'xs' ? '16px' : borderRadius === 'm' ? '24px' : '32px'
 	}; --c-brand-color: var(--color-${brandColor}-${
 		brandColor === 'neutral' ? '200' : '100'
 	}); --c-brand-color-dark: var(--color-${brandColor}-${brandColor === 'primary' ? '300' : '120'});`}
@@ -147,7 +149,8 @@
 	{:else if currentUser === null}
 		<section class="card c-border-radius" style="width: 100%;">
 			<div class="u-max-width-500 u-width-full-line">
-				<h1 class="heading-level-3 u-margin-block-start-auto">Log in {name ? `to ${name}` : ''}</h1>
+				<div class="u-flex u-main-center"><img class="c-border-radius" src={fileId ? AppwriteService.getLogo(fileId) : '/favicon.png'} height="64" alt="Logo"></div>
+				<h1 class="u-text-center u-margin-block-start-24 heading-level-3 u-margin-block-start-auto">Sign in {name ? `to ${name}` : ''}</h1>
 				<div class="u-margin-block-start-24">
 					<div class="form common-section" data-hs-cf-bound="true">
 						<ul class="form-list">
@@ -365,8 +368,9 @@
 	{:else}
 		<section class="card c-border-radius" style="width: 100%;">
 			<div class="u-max-width-500 u-width-full-line">
-				<h1 class="heading-level-3 u-margin-block-start-auto">Welcome</h1>
-				<p>
+				<div class="u-flex u-main-center"><img class="c-border-radius" src={fileId ? AppwriteService.getLogo(fileId) : '/favicon.png'} height="64" alt="Logo"></div>
+				<h1 class="heading-level-3 u-margin-block-start-auto u-margin-block-start-24 u-text-center">Welcome</h1>
+				<p class="u-text-center">
 					You are already signed in as <span class="u-bold" style="color: black;"
 						>{currentUser.name
 							? currentUser.name

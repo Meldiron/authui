@@ -157,6 +157,15 @@
                     "array": false,
                     "size": 255,
                     "default": null
+                },
+                {
+                    "key": "fileId",
+                    "type": "string",
+                    "status": "available",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null
                 }
             ],
             "indexes": [
@@ -183,6 +192,29 @@
                     ]
                 }
             ]
+        }
+    ],
+    "buckets": [
+        {
+            "$id": "logos",
+            "$createdAt": "2023-05-19T16:07:10.524+00:00",
+            "$updatedAt": "2023-05-19T16:07:42.506+00:00",
+            "$permissions": [
+                "read(\"any\")",
+                "create(\"users\")"
+            ],
+            "fileSecurity": false,
+            "name": "Logos",
+            "enabled": true,
+            "maximumFileSize": 5242880,
+            "allowedFileExtensions": [
+                "png",
+                "jpg",
+                "svg"
+            ],
+            "compression": "none",
+            "encryption": true,
+            "antivirus": true
         }
     ]
 }

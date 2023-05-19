@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { ID, Permission, Role } from 'appwrite';
-	import { AppwriteDatabases, type AppwritePage } from './appwrite';
+	import { AppwriteDatabases, AppwriteStorage, type AppwritePage } from './appwrite';
 	import Modal from './modal.svelte';
 	import { accountStore } from './stores';
 	import { goto } from '$app/navigation';
@@ -15,6 +15,7 @@
 		? JSON.parse(page.providerData).providerEndpoint
 		: 'https://cloud.appwrite.io/v1';
 
+	let fileId = page ? page.fileId : '';
 	let successUrl = page ? page.successUrl : '';
 	let failureUrl = page ? page.failureUrl : '';
 	let domain = page ? page.domain : '';
@@ -50,6 +51,7 @@
 			const userId = $accountStore?.$id as string;
 
 			const data = {
+				fileId,
 				domain,
 				name,
 				successUrl,
@@ -116,6 +118,30 @@
 			} catch (err: any) {
 				error = err.message;
 				isLoading = false;
+			}
+		}
+	}
+
+	let uploadingLogo = false;
+	let logoError = '';
+	async function uploadFile(event: any) {
+		const file = event?.target?.files[0] ?? null;
+		if (file) {
+			uploadingLogo = true;
+			try {
+				const userId = $accountStore?.$id as string;
+
+				const response = await AppwriteStorage.createFile('logos', ID.unique(), file, [
+					Permission.read(Role.user(userId)),
+					Permission.update(Role.user(userId)),
+					Permission.delete(Role.user(userId))
+				]);
+
+				fileId = response.$id;
+			} catch (err: any) {
+				logoError = err.message;
+			} finally {
+				uploadingLogo = false;
 			}
 		}
 	}
@@ -266,6 +292,31 @@
 							<span class="u-x-small">XL</span>
 						</button>
 					</div>
+				</div>
+
+				<div>
+					<h3 class="eyebrow-heading-3">App Logo</h3>
+
+					<input
+						on:change={uploadFile}
+						type="file"
+						accept="image/png, image/gif, image/jpeg, image/jpg, image/svg+xml, image/webp"
+						class="u-margin-block-start-12"
+					/>
+
+					{#if uploadingLogo}
+						<div class="u-margin-block-start-12">
+							<div class="loader" />
+						</div>
+					{/if}
+					{#if logoError}
+						<div
+							class="u-margin-block-start-12"
+							style="color: hsl(var(--color-text-danger))"
+						>
+							<p class="text">{logoError}</p>
+						</div>
+					{/if}
 				</div>
 
 				<h3 class="heading-level-7 u-margin-block-start-16">2. Configure</h3>
@@ -676,8 +727,11 @@
 							<span class="icon-check" aria-hidden="true" />
 							<span class="text"
 								>For OAuth to work properly on Safari, make sure your Appwrite endpoint is subdomain
-								of your app domain. You can achieve that in Appwrite Console under Custom Domains in
-								project settings.</span
+								of your app domain. For example, Appwrite at <code class="inline-code"
+									>appwrite.myapp.com</code
+								>
+								and your app at <code class="inline-code">myapp.com</code>. You can achieve that in
+								Appwrite Console under Custom Domains in project settings.</span
 							>
 						</li>
 					{/if}
@@ -710,6 +764,7 @@
 						<div class="u-flex u-cross-center u-flex-vertical u-main-center" style="width: 100%;">
 							<div class="common-section" style="width: 100%;">
 								<Modal
+									{fileId}
 									{brandColor}
 									{name}
 									{borderRadius}
