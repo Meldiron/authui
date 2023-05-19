@@ -128,7 +128,7 @@
 		borderRadius === 'xs' ? '16px' : borderRadius === 'm' ? '24px' : '30px'
 	}; --c-brand-color: var(--color-${brandColor}-${
 		brandColor === 'neutral' ? '200' : '100'
-	}); --c-brand-color-dark: var(--color-${brandColor}-${brandColor === 'primary' ? '300' : '120'})`}
+	}); --c-brand-color-dark: var(--color-${brandColor}-${brandColor === 'primary' ? '300' : '120'});`}
 	class="c-modal u-flex u-flex-vertical u-gap-8"
 >
 	<a href={failureUrl} class="button is-text" style="padding: 0px;"

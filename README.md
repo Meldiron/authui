@@ -1,5 +1,3 @@
-> TODO: Forgot password, Sign up, Maigc URL, SMS login, Some UI for when page is generated
-
 ![Cover](static/cover.png)
 
 # 🔐 Auth UI
@@ -44,6 +42,15 @@ Moderate page documents in Appwrite Console. Delete pages that are spam.
 To contribute to frontend, make sure to use the [Pink Design](https://pink.appwrite.io/) design system. For state management, [Svelte Stores](https://svelte.dev/tutorial/writable-stores/) should be used.
 
 When contributing to Appwrite Functions, use [Appwrite CLI](https://appwrite.io/docs/command-line). Also use Appwrite CLI to sync changes to project structure such as databases or collections.
+
+## 🔮 Future Plans
+
+- Forgot Password page
+- Sign Up page
+- Magic URL page
+- SMS login page
+- TODOs in code (edit page, delete page UX)
+- Account management (claim account, delete account, change name)
 
 ## 🖼️ Screenshots
 
