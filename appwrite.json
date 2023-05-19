@@ -148,6 +148,15 @@
                     "array": false,
                     "size": 50,
                     "default": null
+                },
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "status": "available",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null
                 }
             ],
             "indexes": [
@@ -157,6 +166,17 @@
                     "status": "available",
                     "attributes": [
                         "domain"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                },
+                {
+                    "key": "index_2",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "userId"
                     ],
                     "orders": [
                         "ASC"

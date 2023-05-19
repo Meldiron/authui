@@ -49,7 +49,6 @@ When contributing to Appwrite Functions, use [Appwrite CLI](https://appwrite.io/
 - Sign Up page
 - Magic URL page
 - SMS login page
-- TODOs in code (edit page, delete page UX)
 - Account management (claim account, delete account, change name)
 
 ## 🖼️ Screenshots

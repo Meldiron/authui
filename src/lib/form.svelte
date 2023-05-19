@@ -1,36 +1,42 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { ID, Permission, Role } from 'appwrite';
-	import { AppwriteDatabases } from './appwrite';
+	import { AppwriteDatabases, type AppwritePage } from './appwrite';
 	import Modal from './modal.svelte';
 	import { accountStore } from './stores';
+	import { goto } from '$app/navigation';
 
-	const dispatch = createEventDispatcher();
+	export let page: AppwritePage | null = null;
+	export let showInfo = false;
 
-	let provider = 'appwrite';
-	let providerProject = '';
-	let providerEndpoint = 'https://cloud.appwrite.io/v1';
+	let provider = page ? page.provider : 'appwrite';
+	let providerProject = page ? JSON.parse(page.providerData).providerProject : '';
+	let providerEndpoint = page
+		? JSON.parse(page.providerData).providerEndpoint
+		: 'https://cloud.appwrite.io/v1';
 
-	let successUrl = '';
-	let failureUrl = '';
-	let domain = '';
+	let successUrl = page ? page.successUrl : '';
+	let failureUrl = page ? page.failureUrl : '';
+	let domain = page ? page.domain : '';
 
-	let name = '';
-	let brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral' = 'neutral';
-	let borderRadius: 'xs' | 'm' | 'xl' = 'xs';
+	let name = page ? page.name : '';
+	let brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral' = page
+		? page.brandColor
+		: 'neutral';
+	let borderRadius: 'xs' | 'm' | 'xl' = page ? page.borderRadius : 'xs';
 
-	let allowGuest = false;
-	let allowMagicUrl = false;
-	let allowPhone = false;
+	let allowGuest = page ? page.allowGuest : false;
+	let allowMagicUrl = page ? page.allowMagicUrl : false;
+	let allowPhone = page ? page.allowPhone : false;
 
-	let allowGoogle = false;
-	let allowGitHub = false;
-	let allowTwitter = false;
-	let allowFacebook = false;
+	let allowGoogle = page ? page.allowGoogle : false;
+	let allowGitHub = page ? page.allowGitHub : false;
+	let allowTwitter = page ? page.allowTwitter : false;
+	let allowFacebook = page ? page.allowFacebook : false;
 
 	let isLoading = false;
 	let error = '';
-	let created = false;
+	let created = showInfo === true ? true : false;
 
 	async function onSubmit() {
 		if (isLoading) {
@@ -42,50 +48,85 @@
 
 		try {
 			const userId = $accountStore?.$id as string;
-			await AppwriteDatabases.createDocument(
-				'main',
-				'pages',
-				ID.unique(),
-				{
-					domain,
-					name,
-					successUrl,
-					failureUrl,
-					provider,
-					providerData: JSON.stringify({ providerProject, providerEndpoint }),
-					borderRadius,
-					brandColor,
-					allowGuest,
-					allowMagicUrl,
-					allowPhone,
-					allowGoogle,
-					allowGitHub,
-					allowTwitter,
-					allowFacebook,
-					userId: $accountStore?.$id ?? ''
-				},
-				[
-					Permission.read(Role.user(userId)),
-					Permission.update(Role.user(userId)),
-					Permission.delete(Role.user(userId))
-				]
-			);
 
-			created = true;
+			const data = {
+				domain,
+				name,
+				successUrl,
+				failureUrl,
+				provider,
+				providerData: JSON.stringify({ providerProject, providerEndpoint }),
+				borderRadius,
+				brandColor,
+				allowGuest,
+				allowMagicUrl,
+				allowPhone,
+				allowGoogle,
+				allowGitHub,
+				allowTwitter,
+				allowFacebook,
+				userId: $accountStore?.$id ?? ''
+			};
 
-			dispatch('created');
+			const permissions = [
+				Permission.read(Role.user(userId)),
+				Permission.update(Role.user(userId)),
+				Permission.delete(Role.user(userId))
+			];
+
+			if (page === null) {
+				const project = await AppwriteDatabases.createDocument(
+					'main',
+					'pages',
+					ID.unique(),
+					data,
+					permissions
+				);
+
+				goto(`/pages/${project.$id}/info`);
+			} else {
+				const project = await AppwriteDatabases.updateDocument(
+					'main',
+					'pages',
+					page.$id,
+					data,
+					permissions
+				);
+
+				goto(`/pages/${project.$id}/info`);
+			}
+
+			isLoading = false;
 		} catch (err: any) {
 			error = err.message;
 			isLoading = false;
 		}
 	}
+
+	async function onDelete() {
+		if (confirm('Are you sure you want to delete?')) {
+			isLoading = true;
+
+			try {
+				await AppwriteDatabases.deleteDocument('main', 'pages', page?.$id ?? '');
+
+				goto(`/`);
+
+				isLoading = false;
+			} catch (err: any) {
+				error = err.message;
+				isLoading = false;
+			}
+		}
+	}
 </script>
 
 <form on:submit|preventDefault={onSubmit} class="card common-section">
-	<h6 class="heading-level-7">Generate Page</h6>
-	<p class="u-margin-block-start-8">Customize and configure your auth page.</p>
-
-	<div class="card-separator" style="padding-block-start: 1rem;" />
+	{#if !created}
+		<h6 class="heading-level-7">{page === null ? 'Create Page' : 'Edit Page'}</h6>
+		<p class="u-margin-block-start-8">Customize and configure your auth page.</p>
+		<div class="card-separator" style="padding-block-start: 1rem;" />
+	{/if}
 
 	<div class="common-section grid-1-2" style="position: relative;">
 		{#if $accountStore === undefined || $accountStore === null}
@@ -514,9 +555,16 @@
 					{#if isLoading}
 						<div class="loader" style="color: hsl(var(--color-primary-200));" />
 					{:else}
-						<button type="submit" class="button">
-							<span class="text">Create Auth Page</span></button
-						>
+						<div class="u-flex u-gap-4">
+							<button type="submit" class="button">
+								<span class="text">{page === null ? 'Create Auth Page' : 'Save Page'}</span></button
+							>
+							{#if page !== null}
+								<button on:click={onDelete} type="button" class="button is-text">
+									<span class="text">Delete Page</span></button
+								>
+							{/if}
+						</div>
 					{/if}
 
 					{#if error}
@@ -536,7 +584,7 @@
 			</div>
 		{:else}
 			<div class="grid-1-2-col-1 u-flex u-flex-vertical u-gap-24">
-				<h1 class="heading-level-4">Auth Page Created 🎉</h1>
+				<h1 class="heading-level-4">Auth Page Ready 🎉</h1>
 				<h3 class="heading-level-7">Next steps</h3>
 
 				<ul class="list">
@@ -551,36 +599,88 @@
 					<li class="list-item">
 						<span class="icon-check" aria-hidden="true" />
 						<span class="text"
-							>In your app, redirect "Sign In" button to <code class="inline-code"
+							>In your app, redirect "Sign In / Sign Up" button to <code class="inline-code"
 								>https://{domain}.authui.site/</code
-							></span
+							>. You can also use this URL instead of "Sign Out" button.</span
 						>
 					</li>
 
 					<li class="list-item">
 						<span class="icon-check" aria-hidden="true" />
-						<span class="text"
-							>Make sure all sign-in methods are enabled on your project in your Appwrite Console
-							under User settings</span
-						>
+
+						<div>
+							<span class="text"
+								>Make sure following sign-in methods are enabled on your project in your Appwrite
+								Console under User settings:</span
+							>
+
+							<ol class="numeric-list u-margin-block-start-12">
+								<li class="numeric-list-item">
+									<span class="text"><p class="text u-margin-block-start-8">Email/Password</p></span
+									>
+								</li>
+								{#if allowGuest}
+									<li class="numeric-list-item">
+										<span class="text"><p class="text u-margin-block-start-8">Anonymous</p></span>
+									</li>
+								{/if}
+								{#if allowMagicUrl}
+									<li class="numeric-list-item">
+										<span class="text"><p class="text u-margin-block-start-8">Magic URL</p></span>
+									</li>
+								{/if}
+								{#if allowPhone}
+									<li class="numeric-list-item">
+										<span class="text"><p class="text u-margin-block-start-8">Phone</p></span>
+									</li>
+								{/if}
+							</ol>
+						</div>
 					</li>
 
-					<li class="list-item">
-						<span class="icon-check" aria-hidden="true" />
-						<span class="text"
-							>If you enabled OAuth providers, make sure to configure them in Appwrite Console under
-							Users settings</span
-						>
-					</li>
+					{#if allowGoogle || allowFacebook || allowTwitter || allowGitHub}
+						<li class="list-item">
+							<span class="icon-check" aria-hidden="true" />
+							<div>
+								<span class="text"
+									>Make sure to configure following OAuth providers in Appwrite Console under Users
+									settings:</span
+								>
 
-					<li class="list-item">
-						<span class="icon-check" aria-hidden="true" />
-						<span class="text"
-							>For OAuth to work properly on Safari, make sure your Appwrite endpoint is subdomain
-							of your app domain. You can achieve that in Appwrite Console under Custom Domains in
-							project settings.</span
-						>
-					</li>
+								<ol class="numeric-list u-margin-block-start-12">
+									{#if allowGoogle}
+										<li class="numeric-list-item">
+											<span class="text"><p class="text u-margin-block-start-8">Google</p></span>
+										</li>
+									{/if}
+									{#if allowGitHub}
+										<li class="numeric-list-item">
+											<span class="text"><p class="text u-margin-block-start-8">GitHub</p></span>
+										</li>
+									{/if}
+									{#if allowTwitter}
+										<li class="numeric-list-item">
+											<span class="text"><p class="text u-margin-block-start-8">Twitter</p></span>
+										</li>
+									{/if}
+									{#if allowFacebook}
+										<li class="numeric-list-item">
+											<span class="text"><p class="text u-margin-block-start-8">Facebook</p></span>
+										</li>
+									{/if}
+								</ol>
+							</div>
+						</li>
+
+						<li class="list-item">
+							<span class="icon-check" aria-hidden="true" />
+							<span class="text"
+								>For OAuth to work properly on Safari, make sure your Appwrite endpoint is subdomain
+								of your app domain. You can achieve that in Appwrite Console under Custom Domains in
+								project settings.</span
+							>
+						</li>
+					{/if}
 				</ul>
 			</div>
 		{/if}

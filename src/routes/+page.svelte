@@ -5,7 +5,6 @@
 	import Modal from '$lib/modal.svelte';
 
 	import type { PageData } from './$types';
-
 	export let data: PageData;
 
 	$: isSubdomain = $page.url.hostname.endsWith('localhost')
