@@ -13,13 +13,13 @@
         {
             "$id": "pages",
             "$permissions": [
-                "create(\"any\")",
-                "read(\"any\")"
+                "read(\"any\")",
+                "create(\"users\")"
             ],
             "databaseId": "main",
             "name": "Pages",
             "enabled": true,
-            "documentSecurity": false,
+            "documentSecurity": true,
             "attributes": [
                 {
                     "key": "domain",
@@ -138,6 +138,15 @@
                     "status": "available",
                     "required": true,
                     "array": false,
+                    "default": null
+                },
+                {
+                    "key": "brandColor",
+                    "type": "string",
+                    "status": "available",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
                     "default": null
                 }
             ],

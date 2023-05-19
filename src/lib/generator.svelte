@@ -2,8 +2,20 @@
 	import { browser } from '$app/environment';
 	import { ID } from 'appwrite';
 	import { onMount } from 'svelte';
-	import { AppwriteDatabases } from './appwrite';
+	import { AppwriteAccount, AppwriteDatabases } from './appwrite';
 	import Modal from './modal.svelte';
+
+	let isSignedIn: null | boolean = null;
+	onMount(async () => {
+		if (browser) {
+			try {
+				await AppwriteAccount.get();
+				isSignedIn = true;
+			} catch (err) {
+				isSignedIn = false;
+			}
+		}
+	});
 
 	let provider = 'appwrite';
 	let providerProject = '';
@@ -12,8 +24,6 @@
 	let successUrl = '';
 	let failureUrl = '';
 	let domain = '';
-
-	let adminPassword = '';
 
 	let name = '';
 	let brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral' = 'neutral';
@@ -41,7 +51,7 @@
 		isLoading = true;
 
 		try {
-			const page = await AppwriteDatabases.createDocument('main', 'pages', ID.unique(), {
+			await AppwriteDatabases.createDocument('main', 'pages', ID.unique(), {
 				domain,
 				name,
 				successUrl,
@@ -59,11 +69,6 @@
 				allowFacebook
 			});
 
-			await AppwriteDatabases.createDocument('main', 'pagesPasswords', ID.unique(), {
-				password: adminPassword,
-				pageId: page.$id
-			});
-
 			created = true;
 		} catch (err: any) {
 			error = err.message;
@@ -77,12 +82,19 @@
 		<a class="logo eyebrow-heading-2" href="/"> Auth UI </a>
 		<div class="main-header-end u-margin-inline-end-16">
 			<ul class="buttons-list is-with-padding">
-				<li class="buttons-list-item u-padding-inline-0">
+				<li class="buttons-list-item">
 					<a href="https://github.com/Meldiron/authui" target="_blank" class="button is-secondary"
 						><span aria-hidden="true" class="icon-star" /><span class="text">Star on GitHub</span
 						></a
 					>
 				</li>
+				{#if isSignedIn === true}
+					<li class="buttons-list-item u-padding-inline-0">
+						<a href="https://login.authui.site/" class="button is-only-icon is-text"
+							><span aria-hidden="true" class="icon-user" /></a
+						>
+					</li>
+				{/if}
 			</ul>
 		</div>
 	</header>
@@ -106,7 +118,37 @@
 
 				<div class="card-separator" style="padding-block-start: 1rem;" />
 
-				<div class="common-section grid-1-2">
+				<div class="common-section grid-1-2" style="position: relative;">
+					{#if isSignedIn !== true}
+						<div class="c-hidden-card">
+							<section class="modal is-small">
+								<form class="modal-form" method="dialog">
+									{#if isSignedIn === false}
+										<header class="modal-header">
+											<h4 class="modal-title heading-level-5">Sign In First</h4>
+											<button class="button is-text is-small is-only-icon" aria-label="Close modal">
+												<span class="icon-x" aria-hidden="true" />
+											</button>
+										</header>
+										<div class="modal-content u-small">
+											Ownership of Auth UI page is important. Without ownership, you would not be
+											able to edit the page in future. Please sign in to continue.
+										</div>
+										<div class="modal-footer">
+											<div class="u-flex u-main-end u-gap-16">
+												<a href="https://login.authui.site/" class="button is-secondary">
+													<span class="text">Sign In</span>
+												</a>
+											</div>
+										</div>
+									{:else}
+										<div class="u-flex u-main-center"><div class="loader" /></div>
+									{/if}
+								</form>
+							</section>
+						</div>
+					{/if}
+
 					{#if !created}
 						<div class="grid-1-2-col-1 u-flex u-flex-vertical u-gap-24">
 							<h3 class="heading-level-7">1. Design</h3>
@@ -508,31 +550,6 @@
 												bind:value={failureUrl}
 												placeholder="https://..."
 											/>
-										</div>
-									</li>
-								</ul>
-							</div>
-
-							<h3 class="heading-level-7 u-margin-block-start-16">5. Ownership</h3>
-
-							<div class="form u-width-full-line u-max-width-500">
-								<ul class="form-list">
-									<li class="form-item">
-										<label class="label is-required" for="adminPassword">Admin Password</label>
-										<div class="input-text-wrapper">
-											<input
-												required={true}
-												type="password"
-												id="adminPassword"
-												class="input-text"
-												bind:value={adminPassword}
-												placeholder="some-secret-password"
-											/>
-
-											<div class="tag is-info u-margin-block-start-12">
-												<span class="icon-info" aria-hidden="true" />
-												<span class="text">Required for future changes</span>
-											</div>
 										</div>
 									</li>
 								</ul>

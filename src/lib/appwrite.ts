@@ -1,4 +1,4 @@
-import { Client, Databases, type Models } from 'appwrite';
+import { Account, Client, Databases, type Models } from 'appwrite';
 
 export type AppwritePage = {
 	domain: string,
@@ -19,7 +19,8 @@ export type AppwritePage = {
 } & Models.Document;
 
 export const AppwriteClient = new Client()
-	.setEndpoint('https://cloud.appwrite.io/v1')
+	.setEndpoint('https://appwrite.authui.site/v1')
 	.setProject('authUi');
 
 export const AppwriteDatabases = new Databases(AppwriteClient);
+export const AppwriteAccount = new Account(AppwriteClient);

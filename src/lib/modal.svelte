@@ -20,7 +20,7 @@
 	export let allowPhone: boolean = false;
 	export let allowMagicUrl: boolean = false;
 
-	let currentUser: null | Models.User<any> = null;
+	let currentUser: undefined | null | Models.User<any> = undefined;
 
 	// Credentials section
 	let email = '';
@@ -43,7 +43,7 @@
 				const account = new Account(getClient());
 				currentUser = await account.get();
 			} catch (err: any) {
-				// Ignore
+				currentUser = null;
 			}
 		}
 	});
@@ -126,7 +126,9 @@
 		borderRadius === 'xs' ? '4px' : borderRadius === 'm' ? '12px' : '20px'
 	}; --c-border-radius-card: ${
 		borderRadius === 'xs' ? '16px' : borderRadius === 'm' ? '24px' : '30px'
-	}; --c-brand-color: var(--color-${brandColor}-${brandColor === 'neutral' ? '200' : '100'}); --c-brand-color-dark: var(--color-${brandColor}-${brandColor === 'primary' ? '300' : '120'})`}
+	}; --c-brand-color: var(--color-${brandColor}-${
+		brandColor === 'neutral' ? '200' : '100'
+	}); --c-brand-color-dark: var(--color-${brandColor}-${brandColor === 'primary' ? '300' : '120'})`}
 	class="c-modal u-flex u-flex-vertical u-gap-8"
 >
 	<a href={failureUrl} class="button is-text" style="padding: 0px;"
@@ -134,72 +136,16 @@
 		></a
 	>
 
-	{#if currentUser}
-		<section class="card c-branded-border c-border-radius c-branded-shadow" style="width: 100%;">
+	{#if currentUser === undefined}
+		<section class="card c-border-radius" style="width: 100%;">
 			<div class="u-max-width-500 u-width-full-line">
-				<h1 class="heading-level-3 u-margin-block-start-auto">Welcome</h1>
-				<p>
-					You are already signed in as <span class="u-bold" style="color: black;"
-						>{currentUser.name
-							? currentUser.name
-							: currentUser.email
-							? currentUser.email
-							: currentUser.phone
-							? currentUser.phone
-							: 'Anonymous'}</span
-					>
-				</p>
-				<div class="u-margin-block-start-24">
-					<div class="form common-section" data-hs-cf-bound="true">
-						<ul class="form-list">
-							<li class="form-item u-flex u-flex-vertical u-gap-8">
-								<div class="form" data-hs-cf-bound="true">
-									<ul class="form-list">
-										<li class="form-item">
-											<a href={successUrl}>
-												<button class="c-branded-button button is-full-width" type="submit">Continue</button></a
-											>
-
-											<div
-												style="margin: 1.5rem 0px; border-top: 0.0625rem solid hsl(var(--color-neutral-30));"
-											/>
-
-											{#if isSignOutLoading}
-												<button
-													class="button is-text u-flex u-main-center"
-													style="width: 100%;"
-													disabled={true}
-													type="button"
-												>
-													<div class="loader" />
-												</button>
-											{:else}
-												<button
-													class="button is-secondary is-full-width"
-													type="button"
-													on:click={signOut}>Sign Out</button
-												>
-											{/if}
-
-											{#if signOutError}
-												<div
-													class="u-text-center u-bold u-margin-block-start-16"
-													style="color: hsl(var(--color-text-danger))"
-												>
-													<p class="text">{signOutError}</p>
-												</div>
-											{/if}
-										</li>
-									</ul>
-								</div>
-							</li>
-						</ul>
-					</div>
+				<div class="u-flex u-main-center">
+					<div class="loader" />
 				</div>
 			</div>
 		</section>
-	{:else}
-		<section class="card c-branded-border c-border-radius c-branded-shadow" style="width: 100%;">
+	{:else if currentUser === null}
+		<section class="card c-border-radius" style="width: 100%;">
 			<div class="u-max-width-500 u-width-full-line">
 				<h1 class="heading-level-3 u-margin-block-start-auto">Log in {name ? `to ${name}` : ''}</h1>
 				<div class="u-margin-block-start-24">
@@ -312,9 +258,10 @@
 													<div class="loader" />
 												</button>
 											{:else}
-												<button class="c-branded-button button is-full-width" type="submit">Sign in</button>
+												<button class="c-branded-button button is-full-width" type="submit"
+													>Sign in</button
+												>
 											{/if}
-
 
 											{#if credentialsError}
 												<div
@@ -325,10 +272,7 @@
 												</div>
 											{/if}
 
-
-											<ul
-												class="inline-links is-center is-with-sep u-margin-block-start-16"
-											>
+											<ul class="inline-links is-center is-with-sep u-margin-block-start-16">
 												<li class="inline-links-item">
 													<button type="button"><span class="text">Forgot Password?</span></button>
 												</li>
@@ -418,5 +362,71 @@
 			and
 			<a class="u-bold" href="https://appwrite.io/policy/privacy" target="_blank">Privacy Policy</a>
 		</p>
+	{:else}
+		<section class="card c-border-radius" style="width: 100%;">
+			<div class="u-max-width-500 u-width-full-line">
+				<h1 class="heading-level-3 u-margin-block-start-auto">Welcome</h1>
+				<p>
+					You are already signed in as <span class="u-bold" style="color: black;"
+						>{currentUser.name
+							? currentUser.name
+							: currentUser.email
+							? currentUser.email
+							: currentUser.phone
+							? currentUser.phone
+							: 'Anonymous'}</span
+					>
+				</p>
+				<div class="u-margin-block-start-24">
+					<div class="form common-section" data-hs-cf-bound="true">
+						<ul class="form-list">
+							<li class="form-item u-flex u-flex-vertical u-gap-8">
+								<div class="form" data-hs-cf-bound="true">
+									<ul class="form-list">
+										<li class="form-item">
+											<a href={successUrl}>
+												<button class="c-branded-button button is-full-width" type="submit"
+													>Back to Website</button
+												></a
+											>
+
+											<div
+												style="margin: 1.5rem 0px; border-top: 0.0625rem solid hsl(var(--color-neutral-30));"
+											/>
+
+											{#if isSignOutLoading}
+												<button
+													class="button is-text u-flex u-main-center"
+													style="width: 100%;"
+													disabled={true}
+													type="button"
+												>
+													<div class="loader" />
+												</button>
+											{:else}
+												<button
+													class="button is-secondary is-full-width"
+													type="button"
+													on:click={signOut}>Sign Out</button
+												>
+											{/if}
+
+											{#if signOutError}
+												<div
+													class="u-text-center u-bold u-margin-block-start-16"
+													style="color: hsl(var(--color-text-danger))"
+												>
+													<p class="text">{signOutError}</p>
+												</div>
+											{/if}
+										</li>
+									</ul>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</section>
 	{/if}
 </div>
