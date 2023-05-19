@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import { PUBLIC_HOSTNAME, PUBLIC_AUTHUI_PAGE_ID, PUBLIC_HOSTNAME_PROTOCOL } from '$env/static/public';
+
 	import { ID, Permission, Role } from 'appwrite';
 	import { AppwriteDatabases, AppwriteStorage, type AppwritePage } from './appwrite';
 	import Modal from './modal.svelte';
@@ -172,7 +173,7 @@
 							</div>
 							<div class="modal-footer">
 								<div class="u-flex u-main-end u-gap-16">
-									<a href="https://login.authui.site/" class="button is-secondary">
+									<a href={`${PUBLIC_HOSTNAME_PROTOCOL}://${PUBLIC_AUTHUI_PAGE_ID}.${PUBLIC_HOSTNAME}/`} class="button is-secondary">
 										<span class="text">Sign In</span>
 									</a>
 								</div>
@@ -310,10 +311,7 @@
 						</div>
 					{/if}
 					{#if logoError}
-						<div
-							class="u-margin-block-start-12"
-							style="color: hsl(var(--color-text-danger))"
-						>
+						<div class="u-margin-block-start-12" style="color: hsl(var(--color-text-danger))">
 							<p class="text">{logoError}</p>
 						</div>
 					{/if}
@@ -347,7 +345,7 @@
 										placeholder="my-awesome-app"
 									/>
 									<div class="options-list">
-										<div class="options-list-button">.authui.site</div>
+										<div class="options-list-button">.{PUBLIC_HOSTNAME}</div>
 									</div>
 								</div>
 							</li>
@@ -642,8 +640,8 @@
 					<li class="list-item">
 						<span class="icon-check" aria-hidden="true" />
 						<span class="text"
-							>Add <code class="inline-code">{domain}.authui.site</code> as web platform in your Appwrite
-							project</span
+							>Add <code class="inline-code">{domain}.{PUBLIC_HOSTNAME}</code> as web platform in your
+							Appwrite project</span
 						>
 					</li>
 
@@ -651,7 +649,7 @@
 						<span class="icon-check" aria-hidden="true" />
 						<span class="text"
 							>In your app, redirect "Sign In / Sign Up" button to <code class="inline-code"
-								>https://{domain}.authui.site/</code
+								>{PUBLIC_HOSTNAME_PROTOCOL}://{domain}.{PUBLIC_HOSTNAME}/</code
 							>. You can also use this URL instead of "Sign Out" button.</span
 						>
 					</li>
@@ -783,7 +781,7 @@
 					<section class="code-panel u-min-width-100-percent theme-dark">
 						<code class="code-panel-content grid-code">
 							<div class="grid-code-line-number" />
-							<pre>&lt;a href="https://{domain}.authui.site/"&gt;</pre>
+							<pre>&lt;a href="{PUBLIC_HOSTNAME_PROTOCOL}://{domain}.{PUBLIC_HOSTNAME}/"&gt;</pre>
 							<div class="grid-code-line-number" />
 							<pre>    Sign In</pre>
 							<div class="grid-code-line-number" />

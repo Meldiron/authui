@@ -24,9 +24,10 @@
 
 ## 👀 Client Setup
 
-1. Install libraries `npm install`
-2. Update projectID or endpoint in `src/lib/appwrite.ts`, if not using production
-3. Start server `npm run dev`
+1. Copy `.env.example` to `.env`
+2. Install libraries `npm install`
+3. Update projectID or endpoint in `src/lib/appwrite.ts`, if not using production
+4. Start server `npm run dev`
 
 ## 🚨 Moderation
 
@@ -45,10 +46,7 @@ When contributing to Appwrite Functions, use [Appwrite CLI](https://appwrite.io/
 
 ## 🔮 Future Plans
 
-- Forgot Password page
-- Sign Up page
-- Magic URL page
-- SMS login page
+- Improve Phone login UI
 - Account management (claim account, delete account, change name)
 
 ## 🖼️ Screenshots

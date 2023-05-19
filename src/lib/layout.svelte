@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { PUBLIC_AUTHUI_PAGE_ID, PUBLIC_HOSTNAME, PUBLIC_HOSTNAME_PROTOCOL } from '$env/static/public';
+
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { AppwriteAccount } from './appwrite';
@@ -31,7 +33,7 @@
 				</li>
 				{#if $accountStore}
 					<li class="buttons-list-item u-padding-inline-0">
-						<a href="https://login.authui.site/" class="button is-only-icon is-text"
+						<a href={`${PUBLIC_HOSTNAME_PROTOCOL}://${PUBLIC_AUTHUI_PAGE_ID}.${PUBLIC_HOSTNAME}/`} class="button is-only-icon is-text"
 							><span aria-hidden="true" class="icon-user" /></a
 						>
 					</li>
@@ -43,11 +45,11 @@
 		<div class="top-cover u-padding-block-end-56">
 			<div class="container cover-padding-top-big-screen">
 				{#if isSubpage}
-				<a href="/" class="button is-text" style="padding: 0px;"
-					><span class="icon-cheveron-left" aria-hidden="true" /><span class="text"
-						>Back to Homepage</span
-					></a
-				>
+					<a href="/" class="button is-text" style="padding: 0px;"
+						><span class="icon-cheveron-left" aria-hidden="true" /><span class="text"
+							>Back to Homepage</span
+						></a
+					>
 				{/if}
 
 				<div class="u-flex u-gap-16 u-flex-justify-center u-margin-block-start-16">
