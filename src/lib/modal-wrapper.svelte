@@ -22,6 +22,8 @@
 >
 	{#if page}
 		<Modal
+			lightContrast={page.lightContrast}
+			allowSignUp={page.allowSignUp}
 			{action}
 			privacyPolicy={page.privacyPolicy}
 			termsOfService={page.termsOfService}
@@ -53,8 +55,9 @@
 					<p>This domain was not configured yet, and can still be claimed.</p>
 				</div>
 				<div class="alert-sticky-buttons u-flex">
-					<a href={`${PUBLIC_HOSTNAME_PROTOCOL}://${PUBLIC_HOSTNAME}/`} class="button is-text is-small"
-						><span class="text">Create Page</span></a
+					<a
+						href={`${PUBLIC_HOSTNAME_PROTOCOL}://${PUBLIC_HOSTNAME}/`}
+						class="button is-text is-small"><span class="text">Create Page</span></a
 					>
 				</div>
 			</section>

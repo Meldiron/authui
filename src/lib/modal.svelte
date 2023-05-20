@@ -15,8 +15,11 @@
 
 	export let fileId: string = '';
 	export let borderRadius: 'xs' | 'm' | 'xl' = 'xs';
-	export let brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral' = 'primary';
+	export let brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral' | string =
+		'primary';
+	export let lightContrast = true;
 	export let name: string = '';
+	export let allowSignUp = true;
 
 	export let successUrl: string = '';
 	export let failureUrl: string = '';
@@ -97,11 +100,13 @@
 		borderRadius === 'xs' ? '4px' : borderRadius === 'm' ? '12px' : '20px'
 	}; --c-border-radius-card: ${
 		borderRadius === 'xs' ? '16px' : borderRadius === 'm' ? '24px' : '32px'
-	}; --c-brand-color: var(--color-${brandColor}-${
-		brandColor === 'neutral' ? '200' : '100'
-	}); --c-brand-color-dark: var(--color-${brandColor}-${
-		brandColor === 'primary' ? '300' : '120'
-	});`}
+	}; --c-border-radius-logo: ${
+		borderRadius === 'xs' ? '4xp' : borderRadius === 'm' ? '16px' : '32px'
+	}; --c-brand-color: ${
+		brandColor.startsWith('#')
+			? brandColor
+			: `hsl(var(--color-${brandColor}-${brandColor === 'neutral' ? '200' : '100'}))`
+	}; --c-brand-contrast: ${lightContrast ? '#FFFFFF' : '#000000'};`}
 	class="c-modal u-flex u-flex-vertical u-gap-8"
 >
 	<a href={isPreview ? undefined : failureUrl} class="button is-text" style="padding: 0px;"
@@ -122,7 +127,7 @@
 			<div class="u-max-width-500 u-width-full-line">
 				<div class="u-flex u-main-center">
 					<img
-						class="c-border-radius"
+						class="c-border-radius-logo"
 						src={fileId ? AppwriteService.getLogo(fileId) : '/favicon.png'}
 						height="64"
 						alt="Logo"
@@ -147,6 +152,7 @@
 						<ul class="form-list">
 							{#if action === 'signIn'}
 								<SignIn
+									{allowSignUp}
 									{isPreview}
 									{successUrl}
 									{failureUrl}
@@ -162,7 +168,7 @@
 							{:else if action === 'signUp'}
 								<SignUp {isPreview} {successUrl} {getClient} />
 							{:else if action === 'forgotPassword'}
-								<ForgotPassword {isPreview} {getClient} />
+								<ForgotPassword {allowSignUp} {isPreview} {getClient} />
 							{:else if action === 'forgotPasswordFinish'}
 								<ForgotPasswordFinish {isPreview} {getClient} />
 							{:else if action === 'magicUrl'}
@@ -207,7 +213,7 @@
 			<div class="u-max-width-500 u-width-full-line">
 				<div class="u-flex u-main-center">
 					<img
-						class="c-border-radius"
+						class="c-border-radius-logo"
 						src={fileId ? AppwriteService.getLogo(fileId) : '/favicon.png'}
 						height="64"
 						alt="Logo"

@@ -184,6 +184,22 @@
                     "array": false,
                     "format": "url",
                     "default": null
+                },
+                {
+                    "key": "allowSignUp",
+                    "type": "boolean",
+                    "status": "available",
+                    "required": true,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "lightContrast",
+                    "type": "boolean",
+                    "status": "available",
+                    "required": true,
+                    "array": false,
+                    "default": null
                 }
             ],
             "indexes": [

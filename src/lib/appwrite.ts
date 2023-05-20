@@ -8,7 +8,7 @@ export type AppwritePage = {
 	provider: string,
 	providerData: string,
 	borderRadius: 'xs' | 'm' | 'xl',
-	brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral',
+	brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral' | string,
 	allowGuest: boolean,
 	allowMagicUrl: boolean,
 	allowPhone: boolean,
@@ -19,6 +19,7 @@ export type AppwritePage = {
 	fileId: string,
 	privacyPolicy?: string,
 	termsOfService?: string,
+	allowSignUp: boolean
 } & Models.Document;
 
 export const AppwriteClient = new Client()

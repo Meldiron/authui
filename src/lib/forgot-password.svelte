@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Account, Client, ID } from 'appwrite';
 
+	export let allowSignUp = true;
 	export let isPreview = false;
 	export let getClient: () => Client;
 
@@ -75,9 +76,11 @@
 					{/if}
 
 					<ul class="inline-links is-center is-with-sep u-margin-block-start-16">
+						{#if allowSignUp}
 						<li class="inline-links-item">
 							<a href={isPreview ? undefined : '/sign-up'} type="button"><span class="text">Sign Up</span></a>
 						</li>
+						{/if}
 						<li class="inline-links-item">
 							<a href={isPreview ? undefined : '/'} type="button"><span class="text">Sign In</span></a>
 						</li>

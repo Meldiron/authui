@@ -27,11 +27,14 @@
 	let failureUrl = page ? page.failureUrl : '';
 	let domain = page ? page.domain : '';
 
+	let allowSignUp = page ? page.allowSignUp : true;
+	let lightContrast = page ? page.lightContrast : true;
+
 	let privacyPolicy = page ? page.privacyPolicy : '';
 	let termsOfService = page ? page.termsOfService : '';
 
 	let name = page ? page.name : '';
-	let brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral' = page
+	let brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral' | string = page
 		? page.brandColor
 		: 'neutral';
 	let borderRadius: 'xs' | 'm' | 'xl' = page ? page.borderRadius : 'xs';
@@ -79,7 +82,9 @@
 				allowFacebook,
 				userId: $accountStore?.$id ?? '',
 				termsOfService,
-				privacyPolicy
+				privacyPolicy,
+				lightContrast,
+				allowSignUp
 			};
 
 			const permissions = [
@@ -207,7 +212,13 @@
 					<h3 class="eyebrow-heading-3">Brand Color</h3>
 
 					<div class="u-flex u-flex-wrap u-gap-12 u-margin-block-start-12">
-						<button type="button" on:click={() => (brandColor = 'neutral')}>
+						<button
+							type="button"
+							on:click={() => {
+								brandColor = 'neutral';
+								lightContrast = true;
+							}}
+						>
 							<div
 								class="avatar"
 								style="background-color: hsl(var(--color-neutral-200)); color: white;"
@@ -217,7 +228,13 @@
 								{/if}
 							</div>
 						</button>
-						<button type="button" on:click={() => (brandColor = 'primary')}>
+						<button
+							type="button"
+							on:click={() => {
+								brandColor = 'primary';
+								lightContrast = true;
+							}}
+						>
 							<div
 								class="avatar"
 								style="background-color: hsl(var(--color-primary-100)); color: white;"
@@ -227,7 +244,13 @@
 								{/if}
 							</div>
 						</button>
-						<button type="button" on:click={() => (brandColor = 'success')}>
+						<button
+							type="button"
+							on:click={() => {
+								brandColor = 'success';
+								lightContrast = true;
+							}}
+						>
 							<div
 								class="avatar"
 								style="background-color: hsl(var(--color-success-100)); color: white;"
@@ -237,7 +260,13 @@
 								{/if}
 							</div>
 						</button>
-						<button type="button" on:click={() => (brandColor = 'information')}>
+						<button
+							type="button"
+							on:click={() => {
+								brandColor = 'information';
+								lightContrast = true;
+							}}
+						>
 							<div
 								class="avatar"
 								style="background-color: hsl(var(--color-information-100)); color: white;"
@@ -247,7 +276,13 @@
 								{/if}
 							</div>
 						</button>
-						<button type="button" on:click={() => (brandColor = 'warning')}>
+						<button
+							type="button"
+							on:click={() => {
+								brandColor = 'warning';
+								lightContrast = true;
+							}}
+						>
 							<div
 								class="avatar"
 								style="background-color: hsl(var(--color-warning-100)); color: white;"
@@ -257,7 +292,61 @@
 								{/if}
 							</div>
 						</button>
+
+						<button
+							type="button"
+							on:click={() => {
+								brandColor = '#ffc72c';
+								lightContrast = false;
+							}}
+						>
+							<div class="avatar" style="background-color: white; color: black;">
+								<span class="icon-plus" aria-hidden="true" />
+							</div>
+						</button>
 					</div>
+
+					{#if brandColor.startsWith('#') || brandColor === ''}
+						<ul class="form-list u-margin-block-start-12">
+							<li class="form-item">
+								<label class="label" for="hexColor">HEX Color</label>
+								<div class="input-text-wrapper u-flex u-gap-2">
+									<input
+										bind:value={brandColor}
+										type="color"
+										class="input-text"
+										style="padding: 0px; width: 48px;"
+									/>
+									<input
+										type="text"
+										id="hexColor"
+										class="input-text"
+										bind:value={brandColor}
+										placeholder="#FFFFFF"
+									/>
+								</div>
+							</li>
+							<li class="form-item">
+								<label class="choice-item" for="lightContrast"
+									><div class="input-text-wrapper">
+										<input
+											bind:checked={lightContrast}
+											id="lightContrast"
+											type="checkbox"
+											class="switch"
+											role="switch"
+										/>
+									</div>
+									<div class="choice-item-content">
+										<div class="choice-item-title">Contrast Color</div>
+										<div class="choice-item-paragraph">
+											Toggle between light and dark contrast to your brand color.
+										</div>
+									</div></label
+								>
+							</li>
+						</ul>
+					{/if}
 				</div>
 
 				<div>
@@ -368,6 +457,43 @@
 				</div>
 
 				<ul class="form-list">
+					<li class="form-item">
+						<label class="choice-item" for="signIn"
+							><div class="input-text-wrapper">
+								<input
+									checked={true}
+									disabled={true}
+									id="signIn"
+									type="checkbox"
+									class="switch"
+									role="switch"
+								/>
+							</div>
+							<div class="choice-item-content">
+								<div class="choice-item-title">Sign In</div>
+								<div class="choice-item-paragraph">Login with email and password.</div>
+							</div></label
+						>
+					</li>
+
+					<li class="form-item">
+						<label class="choice-item" for="signUp"
+							><div class="input-text-wrapper">
+								<input
+									bind:checked={allowSignUp}
+									id="signUp"
+									type="checkbox"
+									class="switch"
+									role="switch"
+								/>
+							</div>
+							<div class="choice-item-content">
+								<div class="choice-item-title">Sign Up</div>
+								<div class="choice-item-paragraph">Register with email and password.</div>
+							</div></label
+						>
+					</li>
+
 					<li class="form-item">
 						<label class="choice-item" for="guest"
 							><div class="input-text-wrapper">
@@ -797,15 +923,17 @@
 								</button>
 							</li>
 
-							<li class="secondary-tabs-item">
-								<button
-									on:click={() => (previewTab = 'signUp')}
-									disabled={previewTab === 'signUp'}
-									class="secondary-tabs-button"
-								>
-									<span class="text">Sign Up</span>
-								</button>
-							</li>
+							{#if allowSignUp}
+								<li class="secondary-tabs-item">
+									<button
+										on:click={() => (previewTab = 'signUp')}
+										disabled={previewTab === 'signUp'}
+										class="secondary-tabs-button"
+									>
+										<span class="text">Sign Up</span>
+									</button>
+								</li>
+							{/if}
 
 							<li class="secondary-tabs-item">
 								<button
@@ -834,7 +962,9 @@
 							<div class="u-flex u-cross-center u-flex-vertical u-main-center" style="width: 100%;">
 								<div class="common-section" style="width: 100%;">
 									<Modal
+										{lightContrast}
 										isPreview={true}
+										{allowSignUp}
 										action={previewTab}
 										{termsOfService}
 										{privacyPolicy}
