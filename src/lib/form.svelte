@@ -355,11 +355,11 @@
 
 				<ul class="form-list">
 					<li class="form-item">
-						<label class="choice-item" for="magicUrl"
+						<label class="choice-item" for="guest"
 							><div class="input-text-wrapper">
 								<input
 									bind:checked={allowGuest}
-									id="magicUrl"
+									id="guest"
 									type="checkbox"
 									class="switch"
 									role="switch"
