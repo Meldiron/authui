@@ -11,6 +11,8 @@
 	import SignIn from './sign-in.svelte';
 	import SignUp from './sign-up.svelte';
 
+	export let isPreview = false;
+
 	export let fileId: string = '';
 	export let borderRadius: 'xs' | 'm' | 'xl' = 'xs';
 	export let brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral' = 'primary';
@@ -20,6 +22,9 @@
 	export let failureUrl: string = '';
 	export let provider: string = '';
 	export let providerData: string = '';
+
+	export let termsOfService: string = '';
+	export let privacyPolicy: string = '';
 
 	export let allowGuest: boolean = false;
 	export let allowGoogle: boolean = false;
@@ -52,6 +57,10 @@
 	});
 
 	function getClient() {
+		if (isPreview) {
+			throw new Error('Functionality disabled in preview.');
+		}
+
 		if (provider !== 'appwrite') {
 			throw new Error('Provider not supported.');
 		}
@@ -95,7 +104,7 @@
 	});`}
 	class="c-modal u-flex u-flex-vertical u-gap-8"
 >
-	<a href={failureUrl} class="button is-text" style="padding: 0px;"
+	<a href={isPreview ? undefined : failureUrl} class="button is-text" style="padding: 0px;"
 		><span class="icon-cheveron-left" aria-hidden="true" /><span class="text">Back to Website</span
 		></a
 	>
@@ -138,6 +147,7 @@
 						<ul class="form-list">
 							{#if action === 'signIn'}
 								<SignIn
+									{isPreview}
 									{successUrl}
 									{failureUrl}
 									{getClient}
@@ -150,17 +160,17 @@
 									{allowPhone}
 								/>
 							{:else if action === 'signUp'}
-								<SignUp {successUrl} {getClient} />
+								<SignUp {isPreview} {successUrl} {getClient} />
 							{:else if action === 'forgotPassword'}
-								<ForgotPassword {getClient} />
+								<ForgotPassword {isPreview} {getClient} />
 							{:else if action === 'forgotPasswordFinish'}
-								<ForgotPasswordFinish {getClient} />
+								<ForgotPasswordFinish {isPreview} {getClient} />
 							{:else if action === 'magicUrl'}
-								<MagicUrl {getClient} />
+								<MagicUrl {isPreview} {getClient} />
 							{:else if action === 'magicUrlFinish'}
-								<MagicUrlFinish {successUrl} {getClient} />
+								<MagicUrlFinish {isPreview} {successUrl} {getClient} />
 							{:else if action === 'phoneLogin'}
-								<PhoneLogin {successUrl} {getClient} />
+								<PhoneLogin {isPreview} {successUrl} {getClient} />
 							{/if}
 						</ul>
 					</div>
@@ -174,11 +184,23 @@
 		>
 			By joining, you agree to our <a
 				class="u-bold"
-				href="https://appwrite.io/policy/terms"
+				href={isPreview
+					? undefined
+					: termsOfService
+					? termsOfService
+					: 'https://appwrite.io/policy/terms'}
 				target="_blank">Terms of Service</a
 			>
 			and
-			<a class="u-bold" href="https://appwrite.io/policy/privacy" target="_blank">Privacy Policy</a>
+			<a
+				class="u-bold"
+				href={isPreview
+					? undefined
+					: privacyPolicy
+					? privacyPolicy
+					: 'https://appwrite.io/policy/privacy'}
+				target="_blank">Privacy Policy</a
+			>
 		</p>
 	{:else}
 		<section class="card c-border-radius" style="width: 100%;">
@@ -212,7 +234,7 @@
 								<div class="form" data-hs-cf-bound="true">
 									<ul class="form-list">
 										<li class="form-item">
-											<a href={successUrl}>
+											<a href={isPreview ? undefined : successUrl}>
 												<button class="c-branded-button button is-full-width" type="submit"
 													>Back to Website</button
 												></a

@@ -166,6 +166,24 @@
                     "array": false,
                     "size": 255,
                     "default": null
+                },
+                {
+                    "key": "privacyPolicy",
+                    "type": "string",
+                    "status": "available",
+                    "required": false,
+                    "array": false,
+                    "format": "url",
+                    "default": null
+                },
+                {
+                    "key": "termsOfService",
+                    "type": "string",
+                    "status": "available",
+                    "required": false,
+                    "array": false,
+                    "format": "url",
+                    "default": null
                 }
             ],
             "indexes": [

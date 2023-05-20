@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Account, Client, ID } from 'appwrite';
 
+	export let isPreview = false;
 	export let getClient: () => Client;
 	export let successUrl: string = '';
 
@@ -129,10 +130,10 @@
 
 				<ul class="inline-links is-center is-with-sep u-margin-block-start-16">
 					<li class="inline-links-item">
-						<a href="/forgot-password" type="button"><span class="text">Forgot Password?</span></a>
+						<a href={isPreview ? undefined : '/forgot-password'} type="button"><span class="text">Forgot Password?</span></a>
 					</li>
 					<li class="inline-links-item">
-						<a href="/" type="button"><span class="text">Sign In</span></a>
+						<a href={isPreview ? undefined : '/'} type="button"><span class="text">Sign In</span></a>
 					</li>
 				</ul>
 			</li>

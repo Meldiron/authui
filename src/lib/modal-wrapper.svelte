@@ -23,6 +23,8 @@
 	{#if page}
 		<Modal
 			{action}
+			privacyPolicy={page.privacyPolicy}
+			termsOfService={page.termsOfService}
 			fileId={page.fileId}
 			brandColor={page.brandColor}
 			successUrl={page.successUrl}

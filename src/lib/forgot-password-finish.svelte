@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { Account, Client, ID } from 'appwrite';
 
+	export let isPreview = false;
 	export let getClient: () => Client;
 
 	let password = '';

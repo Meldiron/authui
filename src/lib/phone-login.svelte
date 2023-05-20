@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Account, Client, ID } from 'appwrite';
 
+	export let isPreview = false;
 	export let getClient: () => Client;
 	export let successUrl: string = '';
 
@@ -97,7 +98,7 @@
 
 					<ul class="inline-links is-center is-with-sep u-margin-block-start-16">
 						<li class="inline-links-item">
-							<a href="/" type="button"><span class="text">Other Methods</span></a>
+							<a href={isPreview ? undefined : '/'} type="button"><span class="text">Other Methods</span></a>
 						</li>
 					</ul>
 				</li>

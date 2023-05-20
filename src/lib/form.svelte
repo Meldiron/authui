@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { PUBLIC_HOSTNAME, PUBLIC_AUTHUI_PAGE_ID, PUBLIC_HOSTNAME_PROTOCOL } from '$env/static/public';
+	import {
+		PUBLIC_HOSTNAME,
+		PUBLIC_AUTHUI_PAGE_ID,
+		PUBLIC_HOSTNAME_PROTOCOL
+	} from '$env/static/public';
 
 	import { ID, Permission, Role } from 'appwrite';
 	import { AppwriteDatabases, AppwriteStorage, type AppwritePage } from './appwrite';
@@ -9,6 +13,8 @@
 
 	export let page: AppwritePage | null = null;
 	export let showInfo = false;
+
+	let previewTab: 'signIn' | 'forgotPassword' | 'signUp' = 'signIn';
 
 	let provider = page ? page.provider : 'appwrite';
 	let providerProject = page ? JSON.parse(page.providerData).providerProject : '';
@@ -20,6 +26,9 @@
 	let successUrl = page ? page.successUrl : '';
 	let failureUrl = page ? page.failureUrl : '';
 	let domain = page ? page.domain : '';
+
+	let privacyPolicy = page ? page.privacyPolicy : '';
+	let termsOfService = page ? page.termsOfService : '';
 
 	let name = page ? page.name : '';
 	let brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral' = page
@@ -68,7 +77,9 @@
 				allowGitHub,
 				allowTwitter,
 				allowFacebook,
-				userId: $accountStore?.$id ?? ''
+				userId: $accountStore?.$id ?? '',
+				termsOfService,
+				privacyPolicy
 			};
 
 			const permissions = [
@@ -173,7 +184,10 @@
 							</div>
 							<div class="modal-footer">
 								<div class="u-flex u-main-end u-gap-16">
-									<a href={`${PUBLIC_HOSTNAME_PROTOCOL}://${PUBLIC_AUTHUI_PAGE_ID}.${PUBLIC_HOSTNAME}/`} class="button is-secondary">
+									<a
+										href={`${PUBLIC_HOSTNAME_PROTOCOL}://${PUBLIC_AUTHUI_PAGE_ID}.${PUBLIC_HOSTNAME}/`}
+										class="button is-secondary"
+									>
 										<span class="text">Sign In</span>
 									</a>
 								</div>
@@ -600,6 +614,37 @@
 					</ul>
 				</div>
 
+				<h3 class="heading-level-7 u-margin-block-start-16">5. Legal</h3>
+
+				<div class="form u-width-full-line u-max-width-500">
+					<ul class="form-list">
+						<li class="form-item">
+							<label class="label" for="termsOfService">Terms of Service</label>
+							<div class="input-text-wrapper">
+								<input
+									type="text"
+									id="termsOfService"
+									class="input-text"
+									bind:value={termsOfService}
+									placeholder="https://..."
+								/>
+							</div>
+						</li>
+						<li class="form-item">
+							<label class="label" for="privacyPolicy">Privacy Policy</label>
+							<div class="input-text-wrapper">
+								<input
+									type="text"
+									id="privacyPolicy"
+									class="input-text"
+									bind:value={privacyPolicy}
+									placeholder="https://..."
+								/>
+							</div>
+						</li>
+					</ul>
+				</div>
+
 				<div>
 					{#if isLoading}
 						<div class="loader" style="color: hsl(var(--color-primary-200));" />
@@ -737,58 +782,90 @@
 			</div>
 		{/if}
 
-		<div class="grid-1-2-col-2 u-flex u-flex-vertical u-gap-24">
-			<div class="tabs">
-				<ul class="secondary-tabs is-large">
-					<li class="secondary-tabs-item">
+		<div class="grid-1-2-col-2">
+			<div style="position: sticky; top: 5rem;" class="u-flex u-flex-vertical u-gap-24">
+				<div class="tabs">
+					<ul class="secondary-tabs is-large u-flex u-flex-wrap">
 						{#if !created}
-							<button disabled={true} class="secondary-tabs-button">
-								<span class="text">Preview</span>
-							</button>
+							<li class="secondary-tabs-item">
+								<button
+									on:click={() => (previewTab = 'signIn')}
+									disabled={previewTab === 'signIn'}
+									class="secondary-tabs-button"
+								>
+									<span class="text">Sign In</span>
+								</button>
+							</li>
+
+							<li class="secondary-tabs-item">
+								<button
+									on:click={() => (previewTab = 'signUp')}
+									disabled={previewTab === 'signUp'}
+									class="secondary-tabs-button"
+								>
+									<span class="text">Sign Up</span>
+								</button>
+							</li>
+
+							<li class="secondary-tabs-item">
+								<button
+									on:click={() => (previewTab = 'forgotPassword')}
+									disabled={previewTab === 'forgotPassword'}
+									class="secondary-tabs-button"
+								>
+									<span class="text">Password Recovery</span>
+								</button>
+							</li>
 						{:else}
-							<button disabled={true} class="secondary-tabs-button">
-								<span class="text">HTML</span>
-							</button>
+							<li class="secondary-tabs-item">
+								<button disabled={true} class="secondary-tabs-button">
+									<span class="text">HTML</span>
+								</button>
+							</li>
 						{/if}
-					</li>
-				</ul>
-			</div>
-			<div style="position: sticky; top: 5rem;">
-				{#if !created}
-					<section
-						class="card u-grid u-cross-center u-width-full-line"
-						style="background-color: hsl(var(--p-body-bg-color));"
-					>
-						<div class="u-flex u-cross-center u-flex-vertical u-main-center" style="width: 100%;">
-							<div class="common-section" style="width: 100%;">
-								<Modal
-									{fileId}
-									{brandColor}
-									{name}
-									{borderRadius}
-									{allowGitHub}
-									{allowTwitter}
-									{allowFacebook}
-									{allowGoogle}
-									{allowGuest}
-									{allowMagicUrl}
-									{allowPhone}
-								/>
+					</ul>
+				</div>
+				<div>
+					{#if !created}
+						<section
+							class="card u-grid u-cross-center u-width-full-line"
+							style="background-color: hsl(var(--p-body-bg-color));"
+						>
+							<div class="u-flex u-cross-center u-flex-vertical u-main-center" style="width: 100%;">
+								<div class="common-section" style="width: 100%;">
+									<Modal
+										isPreview={true}
+										action={previewTab}
+										{termsOfService}
+										{privacyPolicy}
+										{fileId}
+										{brandColor}
+										{name}
+										{borderRadius}
+										{allowGitHub}
+										{allowTwitter}
+										{allowFacebook}
+										{allowGoogle}
+										{allowGuest}
+										{allowMagicUrl}
+										{allowPhone}
+									/>
+								</div>
 							</div>
-						</div>
-					</section>
-				{:else}
-					<section class="code-panel u-min-width-100-percent theme-dark">
-						<code class="code-panel-content grid-code">
-							<div class="grid-code-line-number" />
-							<pre>&lt;a href="{PUBLIC_HOSTNAME_PROTOCOL}://{domain}.{PUBLIC_HOSTNAME}/"&gt;</pre>
-							<div class="grid-code-line-number" />
-							<pre>    Sign In</pre>
-							<div class="grid-code-line-number" />
-							<pre>&lt;/a&gt;	</pre>
-						</code>
-					</section>
-				{/if}
+						</section>
+					{:else}
+						<section class="code-panel u-min-width-100-percent theme-dark">
+							<code class="code-panel-content grid-code">
+								<div class="grid-code-line-number" />
+								<pre>&lt;a href="{PUBLIC_HOSTNAME_PROTOCOL}://{domain}.{PUBLIC_HOSTNAME}/"&gt;</pre>
+								<div class="grid-code-line-number" />
+								<pre>    Sign In</pre>
+								<div class="grid-code-line-number" />
+								<pre>&lt;/a&gt;	</pre>
+							</code>
+						</section>
+					{/if}
+				</div>
 			</div>
 		</div>
 	</div>

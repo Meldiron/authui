@@ -48,7 +48,7 @@ When contributing to Appwrite Functions, use [Appwrite CLI](https://appwrite.io/
 
 - Nicer delete confirmation modal
 - Improve Phone login UI
-- Account management (claim account, delete account, change name)
+- Account management (claim account, delete account, change name, manage sessions)
 - More providers
 
 ## 🖼️ Screenshots

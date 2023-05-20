@@ -16,7 +16,9 @@ export type AppwritePage = {
 	allowGitHub: boolean,
 	allowTwitter: boolean,
 	allowFacebook: boolean,
-	fileId: string
+	fileId: string,
+	privacyPolicy?: string,
+	termsOfService?: string,
 } & Models.Document;
 
 export const AppwriteClient = new Client()

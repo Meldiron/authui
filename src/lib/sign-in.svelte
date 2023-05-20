@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Account, Client } from 'appwrite';
 
+	export let isPreview = false;
 	export let getClient: () => Client;
 
 	export let successUrl: string = '';
@@ -183,10 +184,10 @@
 
 				<ul class="inline-links is-center is-with-sep u-margin-block-start-16">
 					<li class="inline-links-item">
-						<a href="/forgot-password" type="button"><span class="text">Forgot Password?</span></a>
+						<a href={isPreview ? undefined : '/forgot-password'} type="button"><span class="text">Forgot Password?</span></a>
 					</li>
 					<li class="inline-links-item">
-						<a href="/sign-up" type="button"><span class="text">Sign Up</span></a>
+						<a href={isPreview ? undefined : '/sign-up'} type="button"><span class="text">Sign Up</span></a>
 					</li>
 				</ul>
 			</li>
@@ -202,14 +203,14 @@
 	{/if}
 
 	{#if allowMagicUrl}
-		<a href="email-login" class="button is-secondary is-full-width" type="button"
+		<a href={isPreview ? undefined : '/email-login'} class="button is-secondary is-full-width" type="button"
 			><span class="icon-mail" aria-hidden="true" />
 			<span class="text">Sign in with Email</span></a
 		>
 	{/if}
 
 	{#if allowPhone}
-		<a href="sms-login" class="button is-secondary is-full-width" type="button"
+		<a href={isPreview ? undefined : '/sms-login'} class="button is-secondary is-full-width" type="button"
 			><span class="icon-phone" aria-hidden="true" />
 			<span class="text">Sign in with SMS</span></a
 		>
