@@ -16,18 +16,6 @@ export const load = (async ({ url }) => {
 		: false;
 
 	if (isSubdomain) {
-		const domain = hostname.split('.')[0];
-		const response = await AppwriteDatabases.listDocuments<AppwritePage>('main', 'pages', [
-			Query.limit(1),
-			Query.equal('domain', domain)
-		]);
-
-		if (response.documents.length > 0) {
-			return {
-				page: response.documents[0]
-			};
-		}
-
 		const responseCustomDomain = await AppwriteDatabases.listDocuments<AppwritePage>(
 			'main',
 			'pages',
@@ -37,6 +25,18 @@ export const load = (async ({ url }) => {
 		if (responseCustomDomain.documents.length > 0) {
 			return {
 				page: responseCustomDomain.documents[0]
+			};
+		}
+
+		const domain = hostname.split('.')[0];
+		const response = await AppwriteDatabases.listDocuments<AppwritePage>('main', 'pages', [
+			Query.limit(1),
+			Query.equal('domain', domain)
+		]);
+
+		if (response.documents.length > 0) {
+			return {
+				page: response.documents[0]
 			};
 		}
 	}
