@@ -27,6 +27,18 @@ export const load = (async ({ url }) => {
 				page: response.documents[0]
 			};
 		}
+
+		const responseCustomDomain = await AppwriteDatabases.listDocuments<AppwritePage>(
+			'main',
+			'pages',
+			[Query.limit(1), Query.equal('customDomain', hostname)]
+		);
+
+		if (responseCustomDomain.documents.length > 0) {
+			return {
+				page: responseCustomDomain.documents[0]
+			};
+		}
 	}
 
 	return {
