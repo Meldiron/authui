@@ -81,8 +81,8 @@
 				allowTwitter,
 				allowFacebook,
 				userId: $accountStore?.$id ?? '',
-				termsOfService,
-				privacyPolicy,
+				termsOfService : termsOfService ? termsOfService : undefined,
+				privacyPolicy: privacyPolicy ? privacyPolicy : undefined,
 				lightContrast,
 				allowSignUp
 			};
