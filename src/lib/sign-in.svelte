@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Account, Client } from 'appwrite';
+	import Password from './components/password.svelte';
 
 	export let isPreview = false;
 	export let getClient: () => Client;
@@ -144,21 +145,7 @@
 			</li>
 			<li class="form-item">
 				<label class="label is-required" for="password">Password</label>
-				<div class="input-text-wrapper">
-					<input
-						bind:value={password}
-						id="password"
-						placeholder="Password"
-						required={true}
-						minlength="8"
-						type="password"
-						class="input-text"
-						autocomplete="off"
-					/>
-					<button type="button" class="show-password-button" aria-label="show password"
-						><span aria-hidden="true" class="icon-eye" /></button
-					>
-				</div>
+				<Password bind:password={password} />
 			</li>
 			<li class="form-item">
 				{#if isCredentialsLoading}

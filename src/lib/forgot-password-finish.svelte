@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { Account, Client, ID } from 'appwrite';
+	import Password from './components/password.svelte';
 
 	export let isPreview = false;
 	export let getClient: () => Client;
@@ -39,6 +40,8 @@
 			isLoading = false;
 		}
 	}
+
+	let visiblePassword = false;
 </script>
 
 <li class="form-item u-flex u-flex-vertical u-gap-8">
@@ -46,39 +49,11 @@
 		<ul class="form-list">
 			<li class="form-item">
 				<label class="label is-required" for="password">Password</label>
-				<div class="input-text-wrapper">
-					<input
-						bind:value={password}
-						id="password"
-						placeholder="Password"
-						required={true}
-						minlength="8"
-						type="password"
-						class="input-text"
-						autocomplete="off"
-					/>
-					<button type="button" class="show-password-button" aria-label="show password"
-						><span aria-hidden="true" class="icon-eye" /></button
-					>
-				</div>
+				<Password bind:password={password} />
 			</li>
 			<li class="form-item">
 				<label class="label is-required" for="passwordAgain">Password Again</label>
-				<div class="input-text-wrapper">
-					<input
-						bind:value={passwordAgain}
-						id="passwordAgain"
-						placeholder="Password Again"
-						required={true}
-						minlength="8"
-						type="password"
-						class="input-text"
-						autocomplete="off"
-					/>
-					<button type="button" class="show-password-button" aria-label="show password"
-						><span aria-hidden="true" class="icon-eye" /></button
-					>
-				</div>
+				<Password bind:password={passwordAgain} />
 			</li>
 			<li class="form-item">
 				{#if isLoading}
