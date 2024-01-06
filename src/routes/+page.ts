@@ -19,7 +19,7 @@ export const load = (async ({ url }) => {
 		const responseCustomDomain = await AppwriteDatabases.listDocuments<AppwritePage>(
 			'main',
 			'pages',
-			[Query.limit(1), Query.equal('customDomain', hostname)]
+			[Query.limit(1), Query.equal('domain', hostname)]
 		);
 
 		if (responseCustomDomain.documents.length > 0) {
