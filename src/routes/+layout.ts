@@ -1,5 +1,5 @@
 import { AppwriteDatabases, type AppwritePage } from '$lib/appwrite';
-import type { PageLoad } from './$types';
+import type { LayoutLoad } from './$types';
 import { Query } from 'appwrite';
 
 export const load = (async ({ url }) => {
@@ -44,4 +44,4 @@ export const load = (async ({ url }) => {
 	return {
 		page: null
 	};
-}) satisfies PageLoad;
+}) satisfies LayoutLoad;
