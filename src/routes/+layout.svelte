@@ -5,7 +5,6 @@
 
 <slot />
 
-
 <div style="display: none;" id="sitemap-links">
 	<a href="/">Home</a>
 	<a href="/sign-up">Sign Up</a>

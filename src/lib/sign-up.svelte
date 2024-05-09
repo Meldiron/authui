@@ -29,7 +29,7 @@
 
 			const account = new Account(getClient());
 			await account.create(ID.unique(), email, password, name);
-			await account.createEmailSession(email, password);
+			await account.createEmailPasswordSession(email, password);
 
 			window.location.href = successUrl;
 		} catch (err: any) {

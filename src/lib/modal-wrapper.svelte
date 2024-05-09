@@ -42,6 +42,7 @@
 			allowTwitter={page.allowTwitter}
 			allowPhone={page.allowPhone}
 			allowMagicUrl={page.allowMagicUrl}
+			allowEmailOtp={page.allowEmailOtp}
 		/>
 	{:else}
 		<div

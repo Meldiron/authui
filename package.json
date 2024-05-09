@@ -30,8 +30,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@appwrite.io/pink": "^0.0.6",
-		"appwrite": "^11.0.0",
+		"@appwrite.io/pink": "^0.16.0",
+		"appwrite": "^14.0.1",
 		"sitemap-generator-cli": "^7.5.0"
 	}
 }

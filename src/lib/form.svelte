@@ -41,6 +41,7 @@
 
 	let allowGuest = page ? page.allowGuest : false;
 	let allowMagicUrl = page ? page.allowMagicUrl : false;
+	let allowEmailOtp = page ? page.allowEmailOtp : false;
 	let allowPhone = page ? page.allowPhone : false;
 
 	let allowGoogle = page ? page.allowGoogle : false;
@@ -51,6 +52,21 @@
 	let isLoading = false;
 	let error = '';
 	let created = showInfo === true ? true : false;
+
+	$: allowMagicUrl, fixEmailOtp();
+	$: allowEmailOtp, fixMagicUrl();
+
+	function fixEmailOtp() {
+		if (allowMagicUrl && allowEmailOtp) {
+			allowEmailOtp = false;
+		}
+	}
+
+	function fixMagicUrl() {
+		if (allowEmailOtp && allowMagicUrl) {
+			allowMagicUrl = false;
+		}
+	}
 
 	async function onSubmit() {
 		if (isLoading) {
@@ -75,13 +91,14 @@
 				brandColor,
 				allowGuest,
 				allowMagicUrl,
+				allowEmailOtp,
 				allowPhone,
 				allowGoogle,
 				allowGitHub,
 				allowTwitter,
 				allowFacebook,
 				userId: $accountStore?.$id ?? '',
-				termsOfService : termsOfService ? termsOfService : undefined,
+				termsOfService: termsOfService ? termsOfService : undefined,
 				privacyPolicy: privacyPolicy ? privacyPolicy : undefined,
 				lightContrast,
 				allowSignUp
@@ -221,7 +238,7 @@
 						>
 							<div
 								class="avatar"
-								style="background-color: hsl(var(--color-neutral-200)); color: white;"
+								style="background-color: hsl(var(--color-neutral-100)); color: white;"
 							>
 								{#if brandColor === 'neutral'}
 									<span class="icon-check" aria-hidden="true" />
@@ -525,10 +542,31 @@
 								/>
 							</div>
 							<div class="choice-item-content">
-								<div class="choice-item-title">Magic URL</div>
+								<div class="choice-item-title">Email (URL)</div>
 								<div class="choice-item-paragraph">
 									Passwordless login. User recieves email and when they visit URL delivered by mail,
 									they get logged in.
+								</div>
+							</div></label
+						>
+					</li>
+
+					<li class="form-item">
+						<label class="choice-item" for="emailOtp"
+							><div class="input-text-wrapper">
+								<input
+									bind:checked={allowEmailOtp}
+									id="emailOtp"
+									type="checkbox"
+									class="switch"
+									role="switch"
+								/>
+							</div>
+							<div class="choice-item-content">
+								<div class="choice-item-title">Email (Code)</div>
+								<div class="choice-item-paragraph">
+									Passwordless login. User recieves email with 6 digit code. When entered, they get
+									logged in.
 								</div>
 							</div></label
 						>
@@ -626,7 +664,7 @@
 									class="u-margin-inline-auto u-opacity-20"
 									alt=""
 								/>
-								<p class="u-opacity-20">Possibly</p>
+								<p class="u-opacity-20">Coming soon</p>
 							</div>
 						</label>
 					</li>
@@ -651,7 +689,7 @@
 									class="u-margin-inline-auto u-opacity-20"
 									alt=""
 								/>
-								<p class="u-opacity-20">Unlikely</p>
+								<p class="u-opacity-20">Coming soon</p>
 							</div>
 						</label>
 					</li>
@@ -670,7 +708,7 @@
 									class="u-margin-inline-auto u-opacity-20"
 									alt=""
 								/>
-								<p class="u-opacity-20">Absolutely not</p>
+								<p class="u-opacity-20">Coming soon</p>
 							</div>
 						</label>
 					</li>
@@ -849,6 +887,11 @@
 										<span class="text"><p class="text u-margin-block-start-8">Magic URL</p></span>
 									</li>
 								{/if}
+								{#if allowEmailOtp}
+									<li class="numeric-list-item">
+										<span class="text"><p class="text u-margin-block-start-8">Email OTP</p></span>
+									</li>
+								{/if}
 								{#if allowPhone}
 									<li class="numeric-list-item">
 										<span class="text"><p class="text u-margin-block-start-8">Phone</p></span>
@@ -978,6 +1021,7 @@
 										{allowGoogle}
 										{allowGuest}
 										{allowMagicUrl}
+										{allowEmailOtp}
 										{allowPhone}
 									/>
 								</div>

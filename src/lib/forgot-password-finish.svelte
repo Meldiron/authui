@@ -3,7 +3,6 @@
 	import { Account, Client, ID } from 'appwrite';
 	import Password from './components/password.svelte';
 
-	export let isPreview = false;
 	export let getClient: () => Client;
 
 	let password = '';
@@ -32,7 +31,7 @@
 			}
 
 			const account = new Account(getClient());
-			await account.updateRecovery(userId, secret, password, passwordAgain);
+			await account.updateRecovery(userId, secret, password);
 
 			goto('/');
 		} catch (err: any) {
@@ -49,7 +48,7 @@
 		<ul class="form-list">
 			<li class="form-item">
 				<label class="label is-required" for="password">Password</label>
-				<Password bind:password={password} />
+				<Password bind:password />
 			</li>
 			<li class="form-item">
 				<label class="label is-required" for="passwordAgain">Password Again</label>

@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { PUBLIC_AUTHUI_PAGE_ID, PUBLIC_HOSTNAME, PUBLIC_HOSTNAME_PROTOCOL } from '$env/static/public';
+	import {
+		PUBLIC_AUTHUI_PAGE_ID,
+		PUBLIC_HOSTNAME,
+		PUBLIC_HOSTNAME_PROTOCOL
+	} from '$env/static/public';
 
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
@@ -33,8 +37,9 @@
 				</li>
 				{#if $accountStore}
 					<li class="buttons-list-item u-padding-inline-0">
-						<a href={`${PUBLIC_HOSTNAME_PROTOCOL}://${PUBLIC_AUTHUI_PAGE_ID}.${PUBLIC_HOSTNAME}/`} class="button is-only-icon is-text"
-							><span aria-hidden="true" class="icon-user" /></a
+						<a
+							href={`${PUBLIC_HOSTNAME_PROTOCOL}://${PUBLIC_AUTHUI_PAGE_ID}.${PUBLIC_HOSTNAME}/`}
+							class="button is-only-icon is-text"><span aria-hidden="true" class="icon-user" /></a
 						>
 					</li>
 				{/if}

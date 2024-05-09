@@ -77,12 +77,16 @@
 
 					<ul class="inline-links is-center is-with-sep u-margin-block-start-16">
 						{#if allowSignUp}
-						<li class="inline-links-item">
-							<a href={isPreview ? undefined : '/sign-up'} type="button"><span class="text">Sign Up</span></a>
-						</li>
+							<li class="inline-links-item">
+								<a href={isPreview ? undefined : '/sign-up'} type="button"
+									><span class="text">Sign Up</span></a
+								>
+							</li>
 						{/if}
 						<li class="inline-links-item">
-							<a href={isPreview ? undefined : '/'} type="button"><span class="text">Sign In</span></a>
+							<a href={isPreview ? undefined : '/'} type="button"
+								><span class="text">Sign In</span></a
+							>
 						</li>
 					</ul>
 				</li>

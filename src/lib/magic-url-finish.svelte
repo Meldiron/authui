@@ -61,7 +61,9 @@
 
 				<ul class="inline-links is-center is-with-sep u-margin-block-start-16">
 					<li class="inline-links-item">
-						<a href={isPreview ? undefined : '/'} type="button"><span class="text">Try Again</span></a>
+						<a href={isPreview ? undefined : '/'} type="button"
+							><span class="text">Try Again</span></a
+						>
 					</li>
 				</ul>
 			</li>

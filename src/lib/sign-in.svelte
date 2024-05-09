@@ -16,6 +16,7 @@
 	export let allowFacebook: boolean = false;
 	export let allowPhone: boolean = false;
 	export let allowMagicUrl: boolean = false;
+	export let allowEmailOtp: boolean = false;
 
 	// Credentials section
 	let email = '';
@@ -30,7 +31,7 @@
 
 	function loginOAuth(provider: string) {
 		const account = new Account(getClient());
-		account.createOAuth2Session(provider, successUrl, failureUrl);
+		account.createOAuth2Session(provider as any, successUrl, failureUrl);
 	}
 
 	async function loginCredentials() {
@@ -43,7 +44,7 @@
 
 		try {
 			const account = new Account(getClient());
-			await account.createEmailSession(email, password);
+			await account.createEmailPasswordSession(email, password);
 
 			window.location.href = successUrl;
 		} catch (err: any) {
@@ -145,7 +146,7 @@
 			</li>
 			<li class="form-item">
 				<label class="label is-required" for="password">Password</label>
-				<Password bind:password={password} />
+				<Password bind:password />
 			</li>
 			<li class="form-item">
 				{#if isCredentialsLoading}
@@ -188,15 +189,15 @@
 		</ul>
 	</form>
 
-	{#if allowGuest || allowMagicUrl || allowPhone}
+	{#if allowGuest || allowMagicUrl || allowEmailOtp || allowPhone}
 		<div style="margin: 1.5rem 0px; border-top: 0.0625rem solid hsl(var(--color-neutral-30));" />
 	{/if}
 
-	{#if allowMagicUrl || allowPhone}
+	{#if allowMagicUrl || allowEmailOtp || allowPhone}
 		<span class="eyebrow-heading-3" style="margin-bottom: 0.3rem;">Passwordless Login</span>
 	{/if}
 
-	{#if allowMagicUrl}
+	{#if allowMagicUrl || allowEmailOtp}
 		<a
 			href={isPreview ? undefined : '/email-login'}
 			class="button is-secondary is-full-width"

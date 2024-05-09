@@ -24,11 +24,10 @@
 
 		try {
 			const account = new Account(getClient());
-			userId = (await account.createPhoneSession(ID.unique(), phone)).userId;
+			userId = (await account.createPhoneToken(ID.unique(), phone)).userId;
 
 			sent = true;
 			isLoading = false;
-			phone = '';
 		} catch (err: any) {
 			error = err.message;
 			isLoading = false;
@@ -98,7 +97,9 @@
 
 					<ul class="inline-links is-center is-with-sep u-margin-block-start-16">
 						<li class="inline-links-item">
-							<a href={isPreview ? undefined : '/'} type="button"><span class="text">Other Methods</span></a>
+							<a href={isPreview ? undefined : '/'} type="button"
+								><span class="text">Other Methods</span></a
+							>
 						</li>
 					</ul>
 				</li>
@@ -161,8 +162,12 @@
 			<li class="form-item">
 				<ul class="inline-links is-center is-with-sep u-margin-block-start-16">
 					<li class="inline-links-item">
-						<button on:click={() => (sent = false)} type="button"
-							><span class="text">Try Again</span></button
+						<button
+							on:click={() => {
+								sent = false;
+								phone = '';
+							}}
+							type="button"><span class="text">Try Again</span></button
 						>
 					</li>
 				</ul>

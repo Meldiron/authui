@@ -62,7 +62,11 @@
 				{#each myPages as page}
 					<tr class="table-row">
 						<td class="table-col" data-title="Document ID">
-							<a href={`${PUBLIC_HOSTNAME_PROTOCOL}://${page.domain}.${PUBLIC_HOSTNAME}/`} target="_blank" class="tag">
+							<a
+								href={`${PUBLIC_HOSTNAME_PROTOCOL}://${page.domain}.${PUBLIC_HOSTNAME}/`}
+								target="_blank"
+								class="tag"
+							>
 								<span class="icon-external-link" aria-hidden="true" />
 								<span class="text">{page.domain}.{PUBLIC_HOSTNAME}</span>
 							</a>

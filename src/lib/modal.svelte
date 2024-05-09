@@ -36,6 +36,7 @@
 	export let allowFacebook: boolean = false;
 	export let allowPhone: boolean = false;
 	export let allowMagicUrl: boolean = false;
+	export let allowEmailOtp: boolean = false;
 
 	let currentUser: undefined | null | Models.User<any> = undefined;
 
@@ -103,9 +104,7 @@
 	}; --c-border-radius-logo: ${
 		borderRadius === 'xs' ? '4xp' : borderRadius === 'm' ? '16px' : '32px'
 	}; --c-brand-color: ${
-		brandColor.startsWith('#')
-			? brandColor
-			: `hsl(var(--color-${brandColor}-${brandColor === 'neutral' ? '200' : '100'}))`
+		brandColor.startsWith('#') ? brandColor : `hsl(var(--color-${brandColor}-100))`
 	}; --c-brand-contrast: ${lightContrast ? '#FFFFFF' : '#000000'};`}
 	class="c-modal u-flex u-flex-vertical u-gap-8"
 >
@@ -163,6 +162,7 @@
 									{allowGoogle}
 									{allowGuest}
 									{allowMagicUrl}
+									{allowEmailOtp}
 									{allowPhone}
 								/>
 							{:else if action === 'signUp'}
@@ -170,9 +170,9 @@
 							{:else if action === 'forgotPassword'}
 								<ForgotPassword {allowSignUp} {isPreview} {getClient} />
 							{:else if action === 'forgotPasswordFinish'}
-								<ForgotPasswordFinish {isPreview} {getClient} />
+								<ForgotPasswordFinish {getClient} />
 							{:else if action === 'magicUrl'}
-								<MagicUrl {isPreview} {getClient} />
+								<MagicUrl {successUrl} {allowMagicUrl} {allowEmailOtp} {isPreview} {getClient} />
 							{:else if action === 'magicUrlFinish'}
 								<MagicUrlFinish {isPreview} {successUrl} {getClient} />
 							{:else if action === 'phoneLogin'}
