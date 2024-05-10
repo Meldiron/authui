@@ -17,6 +17,7 @@ export type AppwritePage = {
 	allowGitHub: boolean;
 	allowTwitter: boolean;
 	allowFacebook: boolean;
+	darkTheme: boolean;
 	fileId: string;
 	privacyPolicy?: string;
 	termsOfService?: string;

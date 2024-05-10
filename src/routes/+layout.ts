@@ -2,6 +2,8 @@ import { AppwriteDatabases, type AppwritePage } from '$lib/appwrite';
 import type { LayoutLoad } from './$types';
 import { Query } from 'appwrite';
 
+export let ssr = false;
+
 export const load = (async ({ url }) => {
 	const hostname = url.hostname;
 
@@ -23,6 +25,9 @@ export const load = (async ({ url }) => {
 		);
 
 		if (responseCustomDomain.documents.length > 0) {
+			if(responseCustomDomain.documents[0] && responseCustomDomain.documents[0].darkTheme) {
+				window.document.body.classList.add('theme-dark');
+			}
 			return {
 				page: responseCustomDomain.documents[0]
 			};
@@ -35,6 +40,9 @@ export const load = (async ({ url }) => {
 		]);
 
 		if (response.documents.length > 0) {
+			if(response.documents[0] && response.documents[0].darkTheme) {
+				window.document.body.classList.add('theme-dark');
+			}
 			return {
 				page: response.documents[0]
 			};
