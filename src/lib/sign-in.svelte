@@ -190,7 +190,7 @@
 	</form>
 
 	{#if allowGuest || allowMagicUrl || allowEmailOtp || allowPhone}
-		<div style="margin: 1.5rem 0px; border-top: 0.0625rem solid hsl(var(--color-neutral-30));" />
+		<div class="c-divider" />
 	{/if}
 
 	{#if allowMagicUrl || allowEmailOtp || allowPhone}

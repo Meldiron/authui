@@ -62,20 +62,29 @@
 			}
 
 			button.is-border-dashed {
-				border: dashed 0.0625rem hsl(var(--color-neutral-30));
-				color: hsl(var(--color-neutral-100));
+				border: dashed 0.0625rem hsl(var(--color-neutral-15));
+				color: hsl(var(--color-neutral-60));
 			}
 
 			button.is-border-dashed:hover {
 				background-color: hsl(var(--color-neutral-5));
 			}
 
+			.theme-dark button.is-border-dashed {
+				border: dashed 0.0625rem hsl(var(--color-neutral-70));
+				color: hsl(var(--color-neutral-10));
+			}
+
+			.theme-dark button.is-border-dashed:hover {
+				background-color: hsl(var(--color-neutral-105));
+			}
+
 			.c-modal button {
-				border-radius: var(--c-border-radius);
+				border-radius: var(--c-border-radius) !important;
 			}
 
 			.c-modal input {
-				border-radius: var(--c-border-radius);
+				border-radius: var(--c-border-radius) !important;
 			}
 
 			.c-branded-button {
@@ -94,6 +103,16 @@
 
 			[type='checkbox']:where(:checked)::before {
 				content: '\ea38' !important;
+			}
+
+			.c-divider {
+				margin: 1.5rem 0px;
+				border-top: 0.0625rem solid hsl(var(--color-neutral-10));
+			}
+
+			.theme-dark .c-divider {
+				margin: 1.5rem 0px;
+				border-top: 0.0625rem solid hsl(var(--color-neutral-70));
 			}
 
 			.switch::before {

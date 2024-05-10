@@ -26,6 +26,7 @@
 	let successUrl = page ? page.successUrl : '';
 	let failureUrl = page ? page.failureUrl : '';
 	let domain = page ? page.domain : '';
+	let darkTheme = page ? page.darkTheme : false;
 
 	let allowSignUp = page ? page.allowSignUp : true;
 	let lightContrast = page ? page.lightContrast : true;
@@ -413,6 +414,26 @@
 							<span class="u-x-small">XL</span>
 						</button>
 					</div>
+				</div>
+
+				<div>
+					<h3 class="eyebrow-heading-3">Color Scheme</h3>
+
+					<label class="choice-item" style="margin-top: 12px" for="darkTheme"
+						><div class="input-text-wrapper">
+							<input
+								bind:checked={darkTheme}
+								id="darkTheme"
+								type="checkbox"
+								class="switch"
+								role="switch"
+							/>
+						</div>
+						<div class="choice-item-content">
+							<div class="choice-item-title">Dark theme</div>
+							<div class="choice-item-paragraph">Apply dark background to auth page.</div>
+						</div></label
+					>
 				</div>
 
 				<div>
@@ -999,8 +1020,14 @@
 				<div>
 					{#if !created}
 						<section
-							class="card u-grid u-cross-center u-width-full-line"
-							style="background-color: hsl(var(--p-body-bg-color));"
+							class={`${
+								darkTheme ? 'theme-dark' : ''
+							} card u-grid u-cross-center u-width-full-line`}
+							style={`${
+								darkTheme
+									? 'background-color: hsl(var(--color-neutral-105));'
+									: 'background-color: hsl(var(--p-body-bg-color));'
+							}`}
 						>
 							<div class="u-flex u-cross-center u-flex-vertical u-main-center" style="width: 100%;">
 								<div class="common-section" style="width: 100%;">
