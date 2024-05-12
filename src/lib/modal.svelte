@@ -9,9 +9,11 @@
 	import PhoneLogin from './phone-login.svelte';
 	import SignIn from './sign-in.svelte';
 	import SignUp from './sign-up.svelte';
+	import { invalidateAll } from '$app/navigation';
 
 	export let isPreview = false;
 
+	export let darkTheme: boolean = false;
 	export let fileId: string = '';
 	export let borderRadius: 'xs' | 'm' | 'xl' = 'xs';
 	export let brandColor: 'primary' | 'success' | 'information' | 'warning' | 'neutral' | string =
@@ -74,8 +76,7 @@
 		try {
 			const account = new Account(getClient());
 			await account.deleteSession('current');
-
-			currentUser = null;
+			await invalidateAll();
 		} catch (err: any) {
 			signOutError = err.message;
 			isSignOutLoading = false;
@@ -202,7 +203,9 @@
 					Welcome
 				</h1>
 				<p class="u-text-center">
-					You are already signed in as <span class="u-bold" style="color: black;"
+					You are already signed in as <span
+						class="u-bold"
+						style={`${darkTheme ? 'color: white;' : 'color: black;'}`}
 						>{currentUser.name
 							? currentUser.name
 							: currentUser.email

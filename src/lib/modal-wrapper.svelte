@@ -23,6 +23,7 @@
 >
 	{#if page}
 		<Modal
+			darkTheme={page.darkTheme}
 			currentUser={user}
 			lightContrast={page.lightContrast}
 			allowSignUp={page.allowSignUp}

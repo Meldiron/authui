@@ -1037,6 +1037,7 @@
 										isPreview={true}
 										{allowSignUp}
 										action={previewTab}
+										{darkTheme}
 										{termsOfService}
 										{privacyPolicy}
 										{fileId}
