@@ -19,7 +19,7 @@
 </script>
 
 {#if isSubdomain}
-	<ModalWrapper page={data.page} action="signIn" />
+	<ModalWrapper user={data.user} page={data.page} action="signIn" />
 {:else}
-	<Generator />
+	<Generator adminUser={data.adminUser} adminPages={data.adminPages} />
 {/if}

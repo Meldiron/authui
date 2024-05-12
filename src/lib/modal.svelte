@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { Account, Client, type Models } from 'appwrite';
-	import { onMount } from 'svelte';
 	import { AppwriteService } from './appwrite';
 	import ForgotPasswordFinish from './forgot-password-finish.svelte';
 	import ForgotPassword from './forgot-password.svelte';
@@ -37,8 +36,7 @@
 	export let allowPhone: boolean = false;
 	export let allowMagicUrl: boolean = false;
 	export let allowEmailOtp: boolean = false;
-
-	let currentUser: undefined | null | Models.User<any> = undefined;
+	export let currentUser: null | Models.User<any>;
 
 	export let action:
 		| 'signIn'
@@ -48,17 +46,6 @@
 		| 'phoneLogin'
 		| 'magicUrl'
 		| 'magicUrlFinish' = 'signIn';
-
-	onMount(async () => {
-		if (browser) {
-			try {
-				const account = new Account(getClient());
-				currentUser = await account.get();
-			} catch (err: any) {
-				currentUser = null;
-			}
-		}
-	});
 
 	function getClient() {
 		if (isPreview) {
@@ -113,15 +100,7 @@
 		></a
 	>
 
-	{#if currentUser === undefined}
-		<section class="card c-border-radius" style="width: 100%;">
-			<div class="u-max-width-500 u-width-full-line">
-				<div class="u-flex u-main-center">
-					<div class="loader" />
-				</div>
-			</div>
-		</section>
-	{:else if currentUser === null}
+	{#if currentUser === null}
 		<section class="card c-border-radius" style="width: 100%;">
 			<div class="u-max-width-500 u-width-full-line">
 				<div class="u-flex u-main-center">

@@ -5,4 +5,4 @@
 	import ModalWrapper from '$lib/modal-wrapper.svelte';
 </script>
 
-<ModalWrapper page={data.page} action="signUp" />
+<ModalWrapper user={data.user} page={data.page} action="signUp" />

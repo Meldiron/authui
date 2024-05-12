@@ -7,6 +7,6 @@
 	export let data: PageData;
 </script>
 
-<Layout isSubpage={true}>
+<Layout isSubpage={true} adminUser={data.adminUser}>
 	<Form page={data.page} />
 </Layout>

@@ -1,49 +1,14 @@
 <script lang="ts">
 	import { PUBLIC_HOSTNAME, PUBLIC_HOSTNAME_PROTOCOL } from '$env/static/public';
-
-	import { Query } from 'appwrite';
 	import Layout from '$lib/layout.svelte';
-	import { AppwriteDatabases, type AppwritePage } from './appwrite';
 	import Form from './form.svelte';
-	import { accountStore } from './stores';
 
-	let myPages: AppwritePage[] = [];
-	let initFetched = false;
-	$: {
-		if ($accountStore) {
-			if (!initFetched) {
-				initFetched = true;
-				fetchPages();
-			}
-		}
-	}
-
-	async function fetchPages() {
-		try {
-			const accountId = $accountStore?.$id ?? '';
-
-			const response = await AppwriteDatabases.listDocuments<AppwritePage>('main', 'pages', [
-				Query.limit(100),
-				Query.equal('userId', accountId)
-			]);
-
-			myPages = response.documents.filter((document) => {
-				const permission = document.$permissions.find(
-					(permission) =>
-						permission.startsWith('update') && permission.includes(`user:${accountId}`)
-				);
-				return permission ? true : false;
-			});
-
-			console.log(myPages);
-		} catch (err) {
-			console.error(err);
-		}
-	}
+	export let adminUser: any | null;
+	export let adminPages: any[] = [];
 </script>
 
-<Layout>
-	{#if myPages.length > 0}
+<Layout {adminUser}>
+	{#if adminPages.length > 0}
 		<table class="table">
 			<thead class="table-thead">
 				<tr class="table-row">
@@ -59,7 +24,7 @@
 				</tr>
 			</thead>
 			<tbody class="table-tbody">
-				{#each myPages as page}
+				{#each adminPages as page}
 					<tr class="table-row">
 						<td class="table-col" data-title="Document ID">
 							<a

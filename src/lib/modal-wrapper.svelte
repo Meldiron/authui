@@ -5,6 +5,7 @@
 	import type { AppwritePage } from './appwrite';
 
 	export let page: AppwritePage | null;
+	export let user: any | null;
 
 	export let action:
 		| 'signIn'
@@ -22,6 +23,7 @@
 >
 	{#if page}
 		<Modal
+			currentUser={user}
 			lightContrast={page.lightContrast}
 			allowSignUp={page.allowSignUp}
 			{action}

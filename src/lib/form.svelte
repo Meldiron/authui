@@ -1032,6 +1032,7 @@
 							<div class="u-flex u-cross-center u-flex-vertical u-main-center" style="width: 100%;">
 								<div class="common-section" style="width: 100%;">
 									<Modal
+										currentUser={null}
 										{lightContrast}
 										isPreview={true}
 										{allowSignUp}

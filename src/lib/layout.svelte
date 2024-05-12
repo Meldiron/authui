@@ -5,23 +5,12 @@
 		PUBLIC_HOSTNAME_PROTOCOL
 	} from '$env/static/public';
 
-	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
-	import { AppwriteAccount } from './appwrite';
 	import { accountStore } from './stores';
 
 	export let isSubpage = false;
+	export let adminUser: any | null;
 
-	onMount(async () => {
-		if (browser) {
-			try {
-				$accountStore = await AppwriteAccount.get();
-			} catch (err) {
-				$accountStore = null;
-				console.log(err);
-			}
-		}
-	});
+	$accountStore = adminUser;
 </script>
 
 <div class="flex flex-vertical">
