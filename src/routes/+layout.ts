@@ -66,30 +66,49 @@ export const load = (async ({ url }) => {
 			: true
 		: false;
 
-	if (isSubdomain) {
-		const responseCustomDomain = await AppwriteDatabases.listDocuments<AppwritePage>(
-			'main',
-			'pages',
-			[Query.limit(1), Query.equal('customDomain', hostname)]
-		);
+	let adminUser = null;
+	let adminPages = null;
 
-		if (responseCustomDomain.documents.length > 0) {
+	if (isSubdomain) {
+		const domain = hostname.split('.')[0];
+
+		const [ responseCustomDomain, response ] = await Promise.all([
+			(async () => {
+				try {
+					return await AppwriteDatabases.listDocuments<AppwritePage>(
+						'main',
+						'pages',
+						[Query.limit(1), Query.equal('customDomain', hostname)]
+					)
+				} catch(err) {
+					console.warn(err);
+					return null;
+				}
+			})(),
+			(async () => {
+				try {
+					return await AppwriteDatabases.listDocuments<AppwritePage>('main', 'pages', [
+						Query.limit(1),
+						Query.equal('domain', domain)
+					])
+				} catch(err) {
+					console.warn(err);
+					return null;
+				}
+			})()
+		])
+
+		if (responseCustomDomain !== null && responseCustomDomain.documents.length > 0) {
 			return await getData(responseCustomDomain.documents[0]);
 		}
 
-		const domain = hostname.split('.')[0];
-		const response = await AppwriteDatabases.listDocuments<AppwritePage>('main', 'pages', [
-			Query.limit(1),
-			Query.equal('domain', domain)
-		]);
-
-		if (response.documents.length > 0) {
+		if (response !== null && response.documents.length > 0) {
 			return await getData(response.documents[0]);
 		}
+	} else {
+		adminUser = await getAdminUser();
+		adminPages = adminUser ? await getAdminPages(adminUser.$id) : [];
 	}
-
-	const adminUser = await getAdminUser();
-	const adminPages = adminUser ? await getAdminPages(adminUser.$id) : [];
 
 	return {
 		page: null,
