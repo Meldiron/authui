@@ -72,15 +72,14 @@ export const load = (async ({ url }) => {
 	if (isSubdomain) {
 		const domain = hostname.split('.')[0];
 
-		const [ responseCustomDomain, response ] = await Promise.all([
+		const [responseCustomDomain, response] = await Promise.all([
 			(async () => {
 				try {
-					return await AppwriteDatabases.listDocuments<AppwritePage>(
-						'main',
-						'pages',
-						[Query.limit(1), Query.equal('customDomain', hostname)]
-					)
-				} catch(err) {
+					return await AppwriteDatabases.listDocuments<AppwritePage>('main', 'pages', [
+						Query.limit(1),
+						Query.equal('customDomain', hostname)
+					]);
+				} catch (err) {
 					console.warn(err);
 					return null;
 				}
@@ -90,13 +89,13 @@ export const load = (async ({ url }) => {
 					return await AppwriteDatabases.listDocuments<AppwritePage>('main', 'pages', [
 						Query.limit(1),
 						Query.equal('domain', domain)
-					])
-				} catch(err) {
+					]);
+				} catch (err) {
 					console.warn(err);
 					return null;
 				}
 			})()
-		])
+		]);
 
 		if (responseCustomDomain !== null && responseCustomDomain.documents.length > 0) {
 			return await getData(responseCustomDomain.documents[0]);
