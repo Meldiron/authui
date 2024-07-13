@@ -16,6 +16,9 @@
 
 	let previewTab: 'signIn' | 'forgotPassword' | 'signUp' = 'signIn';
 
+	let copyOverride = '';
+	let activeFinishedTab = 'html';
+
 	let provider = page ? page.provider : 'appwrite';
 	let providerProject = page ? JSON.parse(page.providerData).providerProject : '';
 	let providerEndpoint = page
@@ -197,9 +200,6 @@
 						{#if $accountStore === null}
 							<header class="modal-header">
 								<h4 class="modal-title heading-level-5">Sign In First</h4>
-								<button class="button is-text is-small is-only-icon" aria-label="Close modal">
-									<span class="icon-x" aria-hidden="true" />
-								</button>
 							</header>
 							<div class="modal-content u-small">
 								Ownership of Auth UI page is important. Without ownership, you would not be able to
@@ -1010,8 +1010,21 @@
 							</li>
 						{:else}
 							<li class="secondary-tabs-item">
-								<button disabled={true} class="secondary-tabs-button">
+								<button
+									on:click={() => (activeFinishedTab = 'html')}
+									disabled={activeFinishedTab === 'html'}
+									class="secondary-tabs-button"
+								>
 									<span class="text">HTML</span>
+								</button>
+							</li>
+							<li class="secondary-tabs-item">
+								<button
+									on:click={() => (activeFinishedTab = 'url')}
+									disabled={activeFinishedTab === 'url'}
+									class="secondary-tabs-button"
+								>
+									<span class="text">URL</span>
 								</button>
 							</li>
 						{/if}
@@ -1056,8 +1069,33 @@
 								</div>
 							</div>
 						</section>
-					{:else}
-						<section class="code-panel u-min-width-100-percent theme-dark">
+					{:else if activeFinishedTab === 'html'}
+						<section class="code-panel u-min-width-100-percent">
+							<header class="code-panel-header">
+								<div class="u-flex u-gap-16 u-margin-inline-start-auto">
+									<button
+										on:click={() => {
+											navigator.clipboard.writeText(`
+									  <a href="${PUBLIC_HOSTNAME_PROTOCOL}://${domain}.${PUBLIC_HOSTNAME}/">
+										  Sign In
+									  </a>
+									  `);
+											copyOverride = 'COPIED';
+											setTimeout(() => {
+												copyOverride = '';
+											}, 1000);
+										}}
+										class="button is-text"
+									>
+										<span class="icon-duplicate" aria-hidden="true" />
+										{#if copyOverride}
+											<span style="font-weight: bold; font-size: 12px;">{copyOverride}</span>
+										{:else}
+											<span class="text">Copy HTML</span>
+										{/if}
+									</button>
+								</div>
+							</header>
 							<code class="code-panel-content grid-code">
 								<div class="grid-code-line-number" />
 								<pre>&lt;a href="{PUBLIC_HOSTNAME_PROTOCOL}://{domain}.{PUBLIC_HOSTNAME}/"&gt;</pre>
@@ -1065,6 +1103,35 @@
 								<pre>    Sign In</pre>
 								<div class="grid-code-line-number" />
 								<pre>&lt;/a&gt;	</pre>
+							</code>
+						</section>
+					{:else if activeFinishedTab === 'url'}
+						<section class="code-panel u-min-width-100-percent">
+							<header class="code-panel-header">
+								<div class="u-flex u-gap-16 u-margin-inline-start-auto">
+									<button
+										on:click={() => {
+											navigator.clipboard.writeText(
+												`${PUBLIC_HOSTNAME_PROTOCOL}://${domain}.${PUBLIC_HOSTNAME}/`
+											);
+											copyOverride = 'COPIED';
+											setTimeout(() => {
+												copyOverride = '';
+											}, 1000);
+										}}
+										class="button is-text"
+									>
+										<span class="icon-duplicate" aria-hidden="true" />
+										{#if copyOverride}
+											<span style="font-weight: bold; font-size: 12px;">{copyOverride}</span>
+										{:else}
+											<span class="text">Copy URL</span>
+										{/if}
+									</button>
+								</div>
+							</header>
+							<code class="code-panel-content grid-code">
+								<pre>{PUBLIC_HOSTNAME_PROTOCOL}://{domain}.{PUBLIC_HOSTNAME}/</pre>
 							</code>
 						</section>
 					{/if}
