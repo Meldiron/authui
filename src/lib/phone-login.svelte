@@ -126,7 +126,7 @@
 									id="code"
 									placeholder="6-digit code"
 									required={true}
-									type="number"
+									type="text"
 									class="input-text"
 									autocomplete="off"
 								/>
