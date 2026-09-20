@@ -1,0 +1,220 @@
+---
+name: appwrite-cli
+description: How to use the Appwrite CLI well. Covers when to use appwrite.config.json vs `appwrite client`, pull/push vs one-shot service calls, type-safe SDK and model generation, query flags, CI auth, Cloud regional endpoints, function/site variables, and traps that `--help` will not mention. Does not catalog commands — run `appwrite <command> --help` for flags. Use whenever running `appwrite`, deploying or pulling functions/sites/tables, generating application code from a table schema, initializing or linking a project, scripting Appwrite, or when the user mentions the Appwrite CLI, appwrite.config.json, `appwrite generate`, `appwrite types`, or `appwrite client`.
+---
+
+
+# Appwrite CLI
+
+`appwrite <command> --help` already lists flags. Read it instead of guessing.
+
+## Config vs `client`
+
+A **real project** (repo, schema, functions, deploys, CI) lives in `appwrite.config.json`. Init once. Pull and push after that. Do not `appwrite client --project-id` on every command — the config already names the project.
+
+A **one-off** (inspect a user, patch one row, poke a remote you will not return to) uses `appwrite client`. Do not scaffold a project for a single API call.
+
+```bash
+# Good — project
+appwrite login
+appwrite list-projects --json
+appwrite init project --project-id <ID>
+appwrite pull table
+# edit appwrite.config.json, then:
+appwrite push table --force
+
+# Bad — project treated as a pile of API calls
+appwrite tablesdb create-table --database-id main --table-id songs ...
+appwrite tablesdb create-varchar-column --database-id main --table-id songs ...
+# the next clone has no record of this
+
+# Good — one-off (already logged in)
+appwrite client --project-id <ID>
+appwrite users get --user-id <ID> --json
+
+# Bad — one-off that litters a repo
+cd ~/some-unrelated-app && appwrite init project
+```
+
+No session? `appwrite client --endpoint https://<REGION>.cloud.appwrite.io/v1 --key "$APPWRITE_API_KEY" --project-id <ID>`.
+
+`appwrite client --project-id` writes `appwrite.config.json` in this directory (or updates one found walking up). That is how you link a folder quickly. Do not run it at the root of an unrelated repo. `APPWRITE_PROJECT_ID` / `APPWRITE_ENDPOINT` override the file without touching it — use those when you are already inside a project and need a one-shot against something else.
+
+## Auth is not the project
+
+| Layer | Lives in | Set with |
+|---|---|---|
+| Who you are (session or API key) | global CLI prefs | `appwrite login` or `appwrite client --key` |
+| Which project | `appwrite.config.json` | `init project`, `pull`, or `client --project-id` |
+
+`init project` talks to the **console**. It needs a login session. An API key cannot list organizations.
+
+```bash
+# Good — CI against a checked-in config
+appwrite client --key "$APPWRITE_API_KEY"
+appwrite push function --force
+
+# Bad — CI that bakes the key into the repo
+appwrite client --key 'standard_....'
+# and commits appwrite.config.json with secrets inside
+```
+
+Env beats the config: `APPWRITE_PROJECT_ID`, `APPWRITE_ENDPOINT`, `APPWRITE_ORGANIZATION_ID`. Check in the config (no secrets). Put keys in the environment.
+
+`--force` skips prompts. Agents and CI have no TTY, so a push that needs confirmation fails without it (`Pass --force instead`). Ask the user, then pass `--force`. Do not use it to skip a change table whose local column is empty.
+
+`appwrite login --switch` rotates saved accounts. `appwrite client --debug` prints the effective endpoint/project with credentials masked. `appwrite client --reset` signs out of everything.
+
+## Cloud endpoints
+
+`appwrite whoami` showing `https://cloud.appwrite.io/v1` is the **account** login host. Leave it. Project API calls use the region host (`https://fra.cloud.appwrite.io/v1`, and so on). `init project` and `client --project-id` pin that region into the config. Self-hosted: one endpoint for both.
+
+```bash
+# Good — project work uses the config's regional endpoint
+cat appwrite.config.json   # "endpoint": "https://fra.cloud.appwrite.io/v1"
+
+# Bad — "fixing" whoami
+appwrite client --endpoint https://fra.cloud.appwrite.io/v1
+# now login/session calls go to a region host they do not belong on
+```
+
+## Schema vs rows
+
+| Pull / push (config) | Service commands (not in the config) |
+|---|---|
+| settings, functions, sites, tables and columns, buckets, teams, webhooks, topics | rows, users, files, executions, messages |
+
+If it should survive a fresh clone, it belongs in the config. Edit the file, then push. Creating the same resources with `tablesdb create-*` or `functions create` bypasses the file the next `pull` / `push` expects.
+
+`databases` is deprecated. Use `tablesdb` and `push table`.
+
+If the change table shows remote values against empty local, the config is missing those fields. Pull that resource, then push. Do not `--force` through it, and do not pull everything as a ritual — `pull settings` is slow.
+
+```text
+   id            │ key             │ remote │ local
+  ───────────────┼─────────────────┼────────┼───────
+   Service       │ account         │ true   │
+   Auth method   │ email-password  │ true   │
+```
+
+```bash
+# Good — local column was empty, so sync first, then push
+appwrite pull settings
+appwrite push settings --force
+
+# Bad — empty local, forced through
+appwrite push settings --force
+```
+
+`push all --all --force` pushes every resource. Scope it (`push function --function-id api`) unless you mean that.
+
+`unique()` is fine for a one-shot row or user. Resources you will push need a **stable** `$id` in the config so the next pull matches.
+
+## Type-safe application code
+
+When writing application code against TablesDB, inspect `appwrite.config.json` before inventing interfaces, database IDs, table IDs, or column names. The generators read the local config; they do not inspect the remote schema. A stale config produces stale code.
+
+If the remote schema is the source of truth, update the config first with `appwrite pull table`. Do not pull over local, unpushed schema edits. If the local config is ahead, generate from it as-is.
+
+For TypeScript, prefer `appwrite generate`. It emits a complete TablesDB wrapper: database and table choices, create/update payloads, returned rows, query fields, and query values are checked by TypeScript. This is stronger than generated model interfaces alone.
+
+```bash
+appwrite generate
+```
+
+Use the generated API instead of dropping back to raw string IDs and handwritten payload types:
+
+```typescript
+import { databases, type Songs } from "./generated/appwrite/index.js";
+
+// Database lookup uses its ID; table lookup uses its name from the config.
+const songs = databases.use("main").use("Songs");
+
+const page = await songs.list({
+  queries: (query) => [
+    query.equal("published", true),
+    query.orderDesc("createdAt"),
+    query.limit(20),
+  ],
+});
+
+const first: Songs | undefined = page.rows[0];
+```
+
+Do not guess the literals in that example: read the generated types or the config. In particular, `.use()` for a table takes its `name`, which may differ from its `$id`. Let compilation expose a misspelled table, column, or wrong query value. Run the project's type checker after generation.
+
+`generate` currently provides the full wrapper for TypeScript. It detects client versus server output from the installed Appwrite package. Server output reads `APPWRITE_API_KEY`; never put that key in generated constants or commit it. Override language, import source, module extension, or client/server mode only when detection is wrong—read `appwrite generate --help` for those flags.
+
+For another supported language, or when the project deliberately uses the regular SDK directly, use `appwrite types <output-directory>`. It supports TypeScript (`ts`), JavaScript (`js`), PHP (`php`), Kotlin (`kotlin`), Swift (`swift`), Java (`java`), Dart (`dart`), and C# (`cs`). Pass these short values to `--language`; names such as `typescript` and `csharp` are not the command's accepted values. Generated files type row data, but they do **not** type-check raw database/table IDs or `Query` calls:
+
+For TypeScript, pass a `.ts` destination when the result will be imported as a module. Passing a directory instead creates `appwrite.d.ts` inside it.
+
+```bash
+appwrite types ./src/appwrite-types.ts --language ts
+```
+
+```typescript
+import { Client, TablesDB } from "appwrite";
+import type { Songs } from "./appwrite-types.js";
+
+// Read these values from appwrite.config.json and expose them through the
+// application's existing configuration mechanism.
+const client = new Client()
+  .setEndpoint("https://<REGION>.cloud.appwrite.io/v1")
+  .setProject("<PROJECT_ID>");
+const tablesDB = new TablesDB(client);
+
+const page = await tablesDB.listRows<Songs>({
+  databaseId: "main", // still an unchecked string
+  tableId: "songs",  // still an unchecked string
+});
+```
+
+Do not describe `types --strict` as “full type safety.” It only converts field names to the target language's naming conventions. Use `generate` when a fully typed TypeScript table API is the goal.
+
+Generated code is derived output. Do not patch it to fix a schema or naming problem; fix `appwrite.config.json` or the generator inputs and regenerate. After every table or column change, rerun the same generation command the repository uses and run its formatter/type checker. Preserve the repository's existing output path and check-in convention.
+
+## Functions and sites
+
+Variables live in `<path>/.env`, not in `appwrite.config.json`. `--with-variables` **replaces** the remote set from that file. Omit it unless you intend to sync secrets.
+
+```bash
+# Good — ship code, leave remote vars alone
+appwrite push function --function-id api --activate --force
+
+# Bad — remote vars you did not list locally are gone
+appwrite push function --function-id api --with-variables --force
+
+# Good — deploy without switching live traffic
+appwrite push function --function-id api --activate=false --force
+```
+
+`--async` returns before the build finishes. Local: `appwrite run function`.
+
+## Queries and output
+
+Prefer `--filter`, `--sort-asc` / `--sort-desc`, `--limit`, `--select`, `--cursor-after`. `--where` is deprecated. `--queries` only for Query JSON the flags cannot express.
+
+```bash
+# Good
+appwrite users list \
+  --filter 'emailVerification=true' \
+  --sort-desc '$createdAt' \
+  --limit 20 \
+  --json
+
+# Bad
+appwrite users list --queries '[{"method":"equal","attribute":"emailVerification","values":[true]}]'
+```
+
+`--filter` parses `true` / `false` / `null`, numbers, and JSON arrays. Repeat the flag to AND. List pages cap at 100; prefer `--cursor-after <lastId>` over a large `--offset`.
+
+`--json` for scripts (empty fields dropped). `--raw` for the unfiltered payload. Secrets stay redacted unless `--show-secrets`.
+
+## The config file itself
+
+The CLI walks **up** from cwd looking for `appwrite.config.json` (or the legacy `appwrite.json`). `push` from `functions/api/` still hits the project root. A stray config in a parent directory will capture you.
+
+Split large projects with `includes` — each value is a relative `.json` array. A resource cannot be both inline and included. Function and site `path` values resolve relative to the include file, not the repo root.
+
+Do not invent the file from memory. `init project` or `pull` writes a valid one. Then edit.
