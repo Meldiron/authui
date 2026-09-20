@@ -1,6 +1,19 @@
 ![Cover](static/cover.png)
 
-# 🔐 Auth UI
+# 🔐 Auth UI (v1, outdated)
+
+> [!IMPORTANT]
+> **This is Auth UI v1, the hosted login page. It is outdated and no longer maintained.**
+>
+> Auth UI 2.0 is a rewrite as embeddable web components that run on your own domain, which fixes the third-party cookie problems the hosted page ran into in Safari, Firefox and Brave. It also adds MFA, account management, session and connection management, every Appwrite OAuth provider, theming and React wrappers.
+>
+> - Repository: https://github.com/Meldiron/getauthui
+> - Docs and playground: https://getauthui.appwrite.network
+> - npm: [`@getauthui/core`](https://www.npmjs.com/package/@getauthui/core)
+> - Migrating a v1 page: https://getauthui.appwrite.network/docs/guides/migrating-from-v1
+>
+> The hosted service at `*.authui.site` keeps running for existing pages, but new projects should start with 2.0.
+
 
 > Fully customizable login flow for your applications. Get started in minutes, not hours!
 
